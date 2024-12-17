@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+indexmap = "^2.7"
 markdown = "1.0.0-alpha.21"
-#markdown2pdf = "^0.1"
+comrak = "^0.32"
