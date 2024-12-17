@@ -97,10 +97,10 @@ fn comrack_parse(document: &str, orig_string: &str, replacement: &str) -> String
                 .autolink(true)
                 .tasklist(true)
                 .superscript(true)
-                .header_ids(true)
+                // .header_ids(true)
                 .footnotes(true)
                 .description_lists(true)
-                .front_matter_delimiter(true)
+                // .front_matter_delimiter(true)
                 .multiline_block_quotes(true)
                 .math_dollars(true)
                 .math_code(true)
@@ -110,11 +110,35 @@ fn comrack_parse(document: &str, orig_string: &str, replacement: &str) -> String
                 .subscript(true)
                 .spoiler(true)
                 .greentext(true)
-                .image_url_rewriter(true)
-                .link_url_rewriter(true)
-            },
-            parse: todo!(),
-            render: todo!(),
+                // .image_url_rewriter(true)
+                // .link_url_rewriter(true)
+                .build(),
+            parse: comrak::ParseOptions::builder()
+                .smart(true)
+                // .default_info_string()
+                // .relaxed_tasklist_matching()
+                // .relaxed_autolinks()
+                // .broken_link_callback()
+                .build(),
+            render: comrak::RenderOptions::builder()
+                // .hardbreaks()
+                // .github_pre_lang()
+                // .full_info_string()
+                // .width()
+                // .unsafe_()
+                // .escape()
+                // .list_style()
+                // .sourcepos()
+                // .experimental_inline_sourcepos()
+                // .escaped_char_spans()
+                // .ignore_setext()
+                // .ignore_empty_links()
+                // .gfm_quirks()
+                // .prefer_fenced()
+                // .figure_with_caption()
+                // .tasklist_classes()
+                // .ol_width()
+                .build()
         },
     );
     // Iterate over all the descendants of root.
