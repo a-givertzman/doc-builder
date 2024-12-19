@@ -1,156 +1,254 @@
 use std::{ffi::OsString, fs, io::Write, path::{Component, Path, PathBuf}, process::Command};
 
-use comrak::html;
+use debugging::session::debug_session::{Backtrace, DebugSession, LogLevel};
+use regex::Regex;
 
 fn main() {
-    let files = files(&PathBuf::from("sss/docs/user-guide/ru"));
-    convert_comrack(files);
-    // convert_markdown2html_converter(files);
+    DebugSession::init(LogLevel::Debug, Backtrace::Short);
+    let path = PathBuf::from("sss/docs/user-guide/ru");
+    let assets = PathBuf::from("sss/assets");
+    let template = "template.html";
+    ComracConvert::new(&path, assets, template).convert();
+    // let files = files(&path);
+    // convert_markdown2html_converter(&path, files);
     // convert_markdown(files);
 }
 ///
 /// https://crates.io/crates/markdown2html-converter
-fn convert_markdown2html_converter(files: Vec<DocDir>) {
-    for dir in files {
-        if dir.is_files_only() {
-            for path in dir.children {
-                let path = path.path;
-                println!("\n{:?}", path);
-                let mut target_path: Vec<_> = path
-                    .parent().unwrap()
-                    // .parent().unwrap()
-                    .components()
-                    .collect();
-                let prefix = OsString::from("docs_target");
-                target_path[0] = Component::Normal(&prefix);
-                let target_path: PathBuf = target_path.into_iter().collect();
-                let target = PathBuf::from(target_path.join(path.file_stem().unwrap()).with_extension("html"));
-                if !target_path.exists() {
-                    println!("creating path: {:?}", target_path);
-                    fs::create_dir_all(target_path).unwrap();
-                }
-                Command::new("markdown2html-converter")
-                    .arg(&path)
-                    .arg("-f")
-                    .arg("-o")
-                    .arg(&target)
-                    .output()
-                    .expect(&format!("failed to write '{:?}'", target));
-            }
-        } else {
-            convert_markdown2html_converter(dir.children)
-        }
-    }
-}
-///
-/// https://github.com/kivikakk/comrak
-fn convert_comrack(files: DocDir) {
+fn convert_markdown2html_converter(path: &Path, files: DocDir) {
+    let mut md_doc = String::new();
     for dir in files.children {
         if dir.is_files_only() {
-            let mut md_doc = String::new();
             println!("\n{:?}", dir.path);
             for path in dir.children {
                 let path = path.path;
                 println!("\t{:?}", path);
+                md_doc.push_str("\n");
                 md_doc.push_str(
                     &fs::read_to_string(&path).unwrap(),
                 );
             }
-            let mut target_path: Vec<_> = dir.path
-                .components()
-                .collect();
-            let prefix = OsString::from("docs_target");
-            target_path[0] = Component::Normal(&prefix);
-            let name = target_path.last().unwrap().clone();
-            let target_path: PathBuf = target_path.into_iter().collect();
-            let target = PathBuf::from(target_path.join(name).with_extension("html"));
-            if !target_path.exists() {
-                println!("creating path: {:?}", target_path);
-                fs::create_dir_all(target_path).unwrap();
-            }
-            println!("       target: {:?}", target);
-            let html = comrack_parse(&md_doc, "", "");
-            let mut file = fs::OpenOptions::new()
-                .truncate(true)
-                .create(true)
-                .write(true)
-                .open(target)
-                .unwrap();
-            file.write_all(html.as_bytes()).unwrap();
         } else {
-            convert_comrack(dir)
+            convert_markdown2html_converter(path, dir)
         }
     }
+    let md_path = path.join("doc.md");
+    let target_doc = "sss/doc.html";
+    let mut file = fs::OpenOptions::new()
+        .truncate(true)
+        .create(true)
+        .write(true)
+        .open(&md_path)
+        .unwrap();
+    file.write_all(md_doc.as_bytes()).unwrap();
+    Command::new("markdown2html-converter")
+        .arg(&md_path)
+        .arg("-f")
+        .arg("-o")
+        .arg(&target_doc)
+        .output()
+        .expect(&format!("failed to write '{:?}'", target_doc));
 }
-fn comrack_parse(document: &str, orig_string: &str, replacement: &str) -> String {
-    // The returned nodes are created in the supplied Arena, and are bound by its lifetime.
-    let arena = comrak::Arena::new();
-    // Parse the document into a root `AstNode`
-    let root = comrak::parse_document(
-        &arena,
-        document,
-        &comrak::Options {
-            extension: comrak::ExtensionOptions::builder()
-                .strikethrough(true)
-                .tagfilter(true)
-                .table(true)
-                .autolink(true)
-                .tasklist(true)
-                .superscript(true)
-                // .header_ids(true)
-                .footnotes(true)
-                .description_lists(true)
-                // .front_matter_delimiter(true)
-                .multiline_block_quotes(true)
-                .math_dollars(true)
-                .math_code(true)
-                .wikilinks_title_after_pipe(true)
-                .wikilinks_title_before_pipe(true)
-                .underline(true)
-                .subscript(true)
-                .spoiler(true)
-                .greentext(true)
-                // .image_url_rewriter(true)
-                // .link_url_rewriter(true)
-                .build(),
-            parse: comrak::ParseOptions::builder()
-                .smart(true)
-                // .default_info_string()
-                // .relaxed_tasklist_matching()
-                // .relaxed_autolinks()
-                // .broken_link_callback()
-                .build(),
-            render: comrak::RenderOptions::builder()
-                // .hardbreaks()
-                // .github_pre_lang()
-                // .full_info_string()
-                // .width()
-                // .unsafe_()
-                // .escape()
-                // .list_style()
-                // .sourcepos()
-                // .experimental_inline_sourcepos()
-                // .escaped_char_spans()
-                // .ignore_setext()
-                // .ignore_empty_links()
-                // .gfm_quirks()
-                // .prefer_fenced()
-                // .figure_with_caption()
-                // .tasklist_classes()
-                // .ol_width()
-                .build()
-        },
-    );
-    // Iterate over all the descendants of root.
-    // for node in root.descendants() {
-    //     if let NodeValue::Text(ref mut text) = node.data.borrow_mut().value {
-    //         // If the node is a text node, replace `orig_string` with `replacement`.
-    //         *text = text.replace(orig_string, replacement)
-    //     }
-    // }
-    let mut html = vec![];
-    comrak::format_html(root, &comrak::Options::default(), &mut html).unwrap();
-    String::from_utf8(html).unwrap()
+///
+/// Converts multiple `markdown` documents into the single `Html`
+/// 
+/// Based on:
+/// https://github.com/kivikakk/comrak
+pub struct ComracConvert {
+    path: PathBuf,
+    assets: PathBuf,
+    template: PathBuf,
+}
+//
+//
+impl ComracConvert {
+    ///
+    /// Returns ComracConvert new instance
+    /// - `path` - folder with markdown documents
+    /// - `assets` - folder with asset files
+    pub fn new(path: impl AsRef<Path>, assets: impl AsRef<Path>, template: impl AsRef<Path>) -> Self {
+        Self {
+            path: path.as_ref().to_path_buf(),
+            assets: assets.as_ref().to_path_buf(),
+            template: template.as_ref().to_path_buf(),
+        }
+    }
+    ///
+    /// Performs a conversion
+    pub fn convert(&self) {
+        let files = files(&self.path);
+        let mut doc = String::new();
+        Self::combine(files.clone(), &mut doc);
+        let target = self.assets.parent().unwrap().join("doc.html");
+        let md_path = self.assets.parent().unwrap().join("doc.md");
+        let mut file = fs::OpenOptions::new()
+            .truncate(true)
+            .create(true)
+            .write(true)
+            .open(&md_path)
+            .unwrap();
+        file.write_all(doc.as_bytes()).unwrap();
+        let html = Self::comrack_parse(&doc, "", "");
+        let template = fs::read_to_string(&self.template).unwrap();
+        let html = template.replace("content", &html);
+        let html = html.replace("======================pagebreak======================", "<div class=\"pagebreak\"> </div>");
+        let mut file = fs::OpenOptions::new()
+            .truncate(true)
+            .create(true)
+            .write(true)
+            .open(target)
+            .unwrap();
+        file.write_all(html.as_bytes()).unwrap();
+    
+    }
+    ///
+    /// Returns marckdown `document` combined from md files
+    fn combine(dir: DocDir, doc: &mut String) {
+        println!("\n{:?}", dir.path);
+        let first = dir.children.iter().find(|child| {
+            (!child.path.is_dir()) && child.header() == dir.header()
+        });
+        match first {
+            Some(first) => {
+                let lines = fs::read_to_string(&first.path).unwrap();
+                let mut lines: Vec<&str> = lines.split('\n').collect();
+                let re = Regex::new(r"^[ \t]*(#)*[ \t](.*)$").unwrap();
+                let first_line = lines.remove(0);
+                let first_line = match re.captures(first_line) {
+                    Some(caps) => format!(
+                        "{} {}. {}\n\n",
+                        caps.get(1).map_or("???", |g| g.as_str()),
+                        first.header(),
+                        caps.get(2).map_or("???", |g| g.as_str()),
+                    ),
+                    None => first_line.to_owned(),
+                };
+                let content = if lines.len() > 1 {
+                    lines.join("\n")
+                } else {
+                    "\n\n".to_owned()
+                };
+                doc.extend([
+                    first_line,
+                    content,
+                ]);
+            }
+            None => {
+                log::warn!("convert_comrack | Headeer not found in '{:?}'", dir.path);
+            },
+        }
+    
+        let children = dir.children.iter().filter(|child| {
+            if child.path.is_dir() {
+                true
+            } else {
+                child.header() != dir.header()
+            }
+        });
+        for dir in children {
+            if dir.path.is_dir() {
+                Self::combine(dir.to_owned(), doc)
+            } else {
+                println!("\t{:?}", dir.path);
+                doc.push_str(
+                    &fs::read_to_string(&dir.path).unwrap(),
+                );
+                doc.push_str("\n\n");
+                doc.push_str("======================pagebreak======================<br />");
+                doc.push_str("\n\n");
+            }
+        }
+    }
+    ///
+    /// Returns a `html` representation of the markdown `document`
+    fn comrack_parse(document: &str, orig_string: &str, replacement: &str) -> String {
+        // The returned nodes are created in the supplied Arena, and are bound by its lifetime.
+        let arena = comrak::Arena::new();
+        // Parse the document into a root `AstNode`
+        let root = comrak::parse_document(
+            &arena,
+            document,
+            &comrak::Options {
+                extension: comrak::ExtensionOptions::builder()
+                    .strikethrough(true)
+                    .tagfilter(true)
+                    .table(true)
+                    .autolink(true)
+                    .tasklist(true)
+                    .superscript(true)
+                    // .header_ids(true)
+                    .footnotes(true)
+                    .description_lists(true)
+                    // .front_matter_delimiter(true)
+                    .multiline_block_quotes(true)
+                    .math_dollars(true)
+                    .math_code(true)
+                    .wikilinks_title_after_pipe(true)
+                    .wikilinks_title_before_pipe(true)
+                    .underline(true)
+                    .subscript(true)
+                    .spoiler(true)
+                    .greentext(true)
+                    // .image_url_rewriter(true)
+                    // .link_url_rewriter(true)
+                    .build(),
+                parse: comrak::ParseOptions::builder()
+                    .smart(true)
+                    // .default_info_string()
+                    // .relaxed_tasklist_matching()
+                    // .relaxed_autolinks()
+                    // .broken_link_callback()
+                    .build(),
+                render: comrak::RenderOptions::builder()
+                    // .hardbreaks()
+                    // .github_pre_lang()
+                    // .full_info_string()
+                    // .width()
+                    // .unsafe_()
+                    // .escape()
+                    // .list_style()
+                    // .sourcepos()
+                    // .experimental_inline_sourcepos()
+                    // .escaped_char_spans()
+                    // .ignore_setext()
+                    // .ignore_empty_links()
+                    // .gfm_quirks()
+                    // .prefer_fenced()
+                    // .figure_with_caption()
+                    // .tasklist_classes()
+                    // .ol_width()
+                    .build()
+            },
+        );
+        // Iterate over all the descendants of root.
+        // for node in root.descendants() {
+        //     if let NodeValue::Text(ref mut text) = node.data.borrow_mut().value {
+        //         // If the node is a text node, replace `orig_string` with `replacement`.
+        //         *text = text.replace(orig_string, replacement)
+        //     }
+        // }
+        let mut html = vec![];
+        comrak::format_html(root, &comrak::Options::default(), &mut html).unwrap();
+        String::from_utf8(html).unwrap()
+    }
+    ///
+    /// Returns a list of all files & folders containing in the path
+    fn files(path: &Path) -> DocDir {
+        let mut result = DocDir::new(&path);
+        match fs::read_dir(path) {
+            Ok(dirs) => {
+                for path in dirs.map(|d| d.unwrap().path()) {
+                    if path.is_dir() {
+                        result.push(files(&path));
+                    } else {
+                        result.push(DocDir::new(&path));
+                    }
+                }
+            }
+            Err(err) => println!("files | Error in path '{:?}': {:?}", path, err),
+        }
+        result
+    }
 }
 ///
 /// https://github.com/wooorm/markdown-rs
@@ -252,9 +350,7 @@ fn files(path: &Path) -> DocDir {
         Ok(dirs) => {
             for path in dirs.map(|d| d.unwrap().path()) {
                 if path.is_dir() {
-                    result.push(
-                        files(&path),
-                    );
+                    result.push(files(&path));
                 } else {
                     result.push(DocDir::new(&path));
                 }
@@ -266,6 +362,7 @@ fn files(path: &Path) -> DocDir {
 }
 ///
 /// 
+#[derive(Clone)]
 struct DocDir {
     pub path: PathBuf,
     pub children: Vec<DocDir>,
@@ -285,5 +382,21 @@ impl DocDir {
     }
     pub fn is_files_only(&self) -> bool {
         self.children.iter().all(|path| path.children.is_empty())
+    }
+    pub fn has_children(&self) -> bool {
+        self.children.is_empty()
+    }
+    pub fn header(&self) -> String {
+        let re = Regex::new(r".*/(.\D+)(\d+)").unwrap();
+        match re.captures(self.path.to_str().unwrap()) {
+            Some(caps) => {
+                format!(
+                    "{} {}",
+                    caps.get(1).map_or("???", |g| g.as_str()),
+                    caps.get(2).map_or("???", |g| g.as_str()),
+                )
+            }
+            None => String::from("???"),
+        }
     }
 }
