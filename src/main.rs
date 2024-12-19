@@ -153,11 +153,11 @@ impl ComracConvert {
                 doc.push_str(
                     &fs::read_to_string(&dir.path).unwrap(),
                 );
-                doc.push_str("\n\n");
-                doc.push_str("======================pagebreak======================<br />");
-                doc.push_str("\n\n");
             }
         }
+        doc.push_str("\n\n");
+        doc.push_str("======================pagebreak======================<br />");
+        doc.push_str("\n\n");
     }
     ///
     /// Returns a `html` representation of the markdown `document`
