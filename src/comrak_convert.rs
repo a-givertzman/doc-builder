@@ -67,7 +67,7 @@ impl ComrakConvert {
             Some(first) => {
                 let lines = fs::read_to_string(&first.path).unwrap();
                 let mut lines: Vec<&str> = lines.split('\n').collect();
-                let re = Regex::new(r"^[ \t]*(#)*[ \t](.*)$").unwrap();
+                let re = Regex::new(r"^[ \t]*(#*)[ \t](.*)$").unwrap();
                 let first_line = lines.remove(0);
                 let first_line = match re.captures(first_line) {
                     Some(caps) => format!(
@@ -111,7 +111,7 @@ impl ComrakConvert {
             }
         }
         doc.push_str("\n\n");
-        doc.push_str("======================pagebreak======================<br /><br />");
+        doc.push_str("======================pagebreak======================");
         doc.push_str("\n\n");
     }
     ///
