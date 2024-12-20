@@ -145,21 +145,3 @@ fn convert_markdown(files: Vec<PathBuf>) {
         file.write_all(html.as_bytes()).unwrap();
     }
 }
-
-
-fn files(path: &Path) -> DocDir {
-    let mut result = DocDir::new(&path);
-    match fs::read_dir(path) {
-        Ok(dirs) => {
-            for path in dirs.map(|d| d.unwrap().path()) {
-                if path.is_dir() {
-                    result.push(files(&path));
-                } else {
-                    result.push(DocDir::new(&path));
-                }
-            }
-        }
-        Err(err) => println!("files | Error in path '{:?}': {:?}", path, err),
-    }
-    result
-}

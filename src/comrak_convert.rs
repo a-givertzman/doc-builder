@@ -31,9 +31,9 @@ impl ComrakConvert {
     ///
     /// Performs a conversion
     pub fn convert(&self) {
-        let files = Self::files(&self.path);
+        let dir = DocDir::new(&self.path).scan();
         let mut doc = String::new();
-        Self::combine(files.clone(), &mut doc);
+        Self::combine(dir.clone(), &mut doc);
         let target = self.assets.parent().unwrap().join("doc.html");
         let md_path = self.assets.parent().unwrap().join("doc.md");
         let mut file = fs::OpenOptions::new()
@@ -61,7 +61,7 @@ impl ComrakConvert {
     fn combine(dir: DocDir, doc: &mut String) {
         println!("\n{:?}", dir.path);
         let first = dir.children.iter().find(|child| {
-            (!child.path.is_dir()) && child.header() == dir.header()
+            (!child.is_dir) && child.header() == dir.header()
         });
         match first {
             Some(first) => {
@@ -94,19 +94,19 @@ impl ComrakConvert {
         }
     
         let children = dir.children.iter().filter(|child| {
-            if child.path.is_dir() {
+            if child.is_dir {
                 true
             } else {
                 child.header() != dir.header()
             }
         });
-        for dir in children {
-            if dir.path.is_dir() {
-                Self::combine(dir.to_owned(), doc)
+        for child in children {
+            if child.is_dir {
+                Self::combine(child.to_owned(), doc)
             } else {
-                println!("\t{:?}", dir.path);
+                println!("\t{:?}", child.path);
                 doc.push_str(
-                    &fs::read_to_string(&dir.path).unwrap(),
+                    &fs::read_to_string(&child.path).unwrap(),
                 );
             }
         }
@@ -185,23 +185,5 @@ impl ComrakConvert {
         let mut html = vec![];
         comrak::format_html(root, &comrak::Options::default(), &mut html).unwrap();
         String::from_utf8(html).unwrap()
-    }
-    ///
-    /// Returns a list of all files & folders containing in the path
-    fn files(path: &Path) -> DocDir {
-        let mut result = DocDir::new(&path);
-        match fs::read_dir(path) {
-            Ok(dirs) => {
-                for path in dirs.map(|d| d.unwrap().path()) {
-                    if path.is_dir() {
-                        result.push(Self::files(&path));
-                    } else {
-                        result.push(DocDir::new(&path));
-                    }
-                }
-            }
-            Err(err) => println!("files | Error in path '{:?}': {:?}", path, err),
-        }
-        result
     }
 }
