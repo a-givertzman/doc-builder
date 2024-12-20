@@ -109,6 +109,7 @@ impl ComrakConvert {
                     &fs::read_to_string(&child.path).unwrap(),
                 );
             }
+            doc.push_str("\n\n");
         }
         doc.push_str("\n\n");
         doc.push_str("======================pagebreak======================");
