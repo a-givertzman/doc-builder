@@ -111,7 +111,7 @@ impl ComrakConvert {
             }
         }
         doc.push_str("\n\n");
-        doc.push_str("======================pagebreak======================<br />");
+        doc.push_str("======================pagebreak======================<br /><br />");
         doc.push_str("\n\n");
     }
     ///
