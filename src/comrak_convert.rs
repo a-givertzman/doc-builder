@@ -160,7 +160,7 @@ impl ComrakConvert {
                     // .github_pre_lang()
                     // .full_info_string()
                     // .width()
-                    // .unsafe_()
+                    .unsafe_(true)
                     // .escape()
                     // .list_style()
                     // .sourcepos()

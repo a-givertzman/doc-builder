@@ -9,7 +9,7 @@ use doc_dir::DocDir;
 
 fn main() {
     DebugSession::init(LogLevel::Debug, Backtrace::Short);
-    let path = PathBuf::from("sss/docs/user-guide/ru");
+    let path = PathBuf::from("sss/docs/user-guide/en");
     let assets = PathBuf::from("sss/assets");
     let template = "template.html";
     ComrakConvert::new(&path, assets, template).convert();
