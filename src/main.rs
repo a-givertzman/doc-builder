@@ -1,19 +1,38 @@
 mod comrak_convert;
 mod doc_dir;
+mod cli;
 
 use std::{ffi::OsString, fs, io::Write, path::{Component, Path, PathBuf}, process::Command};
 
+use clap::Parser;
+use cli::Cli;
 use comrak_convert::ComrakConvert;
 use debugging::session::debug_session::{Backtrace, DebugSession, LogLevel};
 use doc_dir::DocDir;
 
 fn main() {
     DebugSession::init(LogLevel::Debug, Backtrace::Short);
-    // let path = PathBuf::from("sss/docs/user-guide/en");
-    let path = PathBuf::from("sss/docs/test/report");
-    let assets = PathBuf::from("sss/assets");
-    let template = "template.html";
-    ComrakConvert::new(&path, assets, template).convert();
+    match Cli::try_parse() {
+        Ok(cli) => {
+            // let path = PathBuf::from("sss/docs/user-guide/en");
+            // let path = PathBuf::from("sss/docs/test/report");
+            // let assets = PathBuf::from("sss/assets");
+            let path = PathBuf::from(cli.name);
+            let assets = match cli.assets {
+                Some(assets) => PathBuf::from(assets),
+                None => PathBuf::from("./assets"),
+            };
+            let output = match cli.output {
+                Some(output) => PathBuf::from(output),
+                None => path.clone(),
+            };
+            let template = "template.html";
+            ComrakConvert::new(&path, &output, assets, template).convert();
+        }
+        Err(err) => {
+            log::error!("{:#?}", err);
+        }
+    };
     // let files = files(&path);
     // convert_markdown2html_converter(&path, files);
     // convert_markdown(files);

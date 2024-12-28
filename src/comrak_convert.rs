@@ -11,6 +11,7 @@ use crate::doc_dir::DocDir;
 /// https://github.com/kivikakk/comrak
 pub struct ComrakConvert {
     path: PathBuf,
+    output: PathBuf,
     assets: PathBuf,
     template: PathBuf,
 }
@@ -22,9 +23,10 @@ impl ComrakConvert {
     /// Returns ComracConvert new instance
     /// - `path` - folder with markdown documents
     /// - `assets` - folder with asset files
-    pub fn new(path: impl AsRef<Path>, assets: impl AsRef<Path>, template: impl AsRef<Path>) -> Self {
+    pub fn new(path: impl AsRef<Path>, output: impl AsRef<Path>, assets: impl AsRef<Path>, template: impl AsRef<Path>) -> Self {
         Self {
             path: path.as_ref().to_path_buf(),
+            output: output.as_ref().to_path_buf(),
             assets: assets.as_ref().to_path_buf(),
             template: template.as_ref().to_path_buf(),
         }
@@ -52,8 +54,6 @@ impl ComrakConvert {
             doc.push_str("\n");
             prev_is_empty = re_is_empty.is_match(line);
         }
-        // let re = Regex::new(r#"(^# )"#).unwrap();
-        // doc = String::from(re.replace_all(&doc, format!("\n\n{}\n\n$1", Self::PAGEBREAK)));
         doc
     }
     ///

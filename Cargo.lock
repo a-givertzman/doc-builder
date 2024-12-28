@@ -453,6 +453,7 @@ dependencies = [
 name = "md_to_pdf"
 version = "0.1.0"
 dependencies = [
+ "clap",
  "comrak",
  "debugging",
  "env_logger",
