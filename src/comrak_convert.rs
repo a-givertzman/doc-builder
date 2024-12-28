@@ -1,4 +1,4 @@
-use std::{fs, io::Write, path::{Path, PathBuf}};
+use std::{fs, io::{Read, Write}, path::{Path, PathBuf}};
 
 use regex::Regex;
 
@@ -63,16 +63,27 @@ impl ComrakConvert {
         let mut doc = String::new();
         Self::combine(dir.clone(), &mut doc);
         doc = Self::add_pagebreakes(&doc);
-        let target = self.assets.parent().unwrap().join("doc.html");
-        let md_path = self.assets.parent().unwrap().join("doc.md");
-        let mut file = fs::OpenOptions::new()
-            .truncate(true)
-            .create(true)
-            .write(true)
-            .open(&md_path)
-            .unwrap();
-        file.write_all(doc.as_bytes()).unwrap();
-        // doc = fs::read_to_string(&md_path).unwrap();
+        let target = if self.output.is_dir() {
+            self.output.join("doc.html")
+        } else {
+            self.output.with_extension("html")
+        };
+        if self.path.is_dir() {
+            let md_path = self.output.join("doc.md");
+            let mut file = fs::OpenOptions::new()
+                .truncate(true)
+                .create(true)
+                .write(true)
+                .open(&md_path)
+                .unwrap();
+            file.write_all(doc.as_bytes()).unwrap();
+        } else {
+            let mut file = fs::OpenOptions::new()
+                .read(true)
+                .open(&self.path)
+                .unwrap();
+            file.read_to_string(&mut doc).unwrap();
+        };
         let html = Self::comrack_parse(&doc);
         let template = fs::read_to_string(&self.template).unwrap();
         let html = template.replace("content", &html);
