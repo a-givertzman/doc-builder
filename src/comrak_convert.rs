@@ -69,7 +69,7 @@ impl ComrakConvert {
             //     .open(&self.path)
             //     .unwrap();
         
-            // let img = image::load(&data.clone()).unwrap();
+            // let img = image::load_from_memory(&data.clone()).unwrap();
             // println!("{}", image_to_base64(&img));
         }
         String::new()
