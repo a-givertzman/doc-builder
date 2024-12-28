@@ -129,7 +129,7 @@ impl ComrakConvert {
             doc = Self::add_pagebreakes(&doc);
         };
         let html = Self::comrack_parse(&doc);
-        let html = Self::embedd_images(&html, &self.assets);
+        // let html = Self::embedd_images(&html, &self.assets);
         let template = fs::read_to_string(&self.template).unwrap();
         let html = template.replace("content", &html);
         let html = html.replace(Self::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
