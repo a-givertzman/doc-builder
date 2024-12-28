@@ -59,15 +59,16 @@ impl ComrakConvert {
     ///
     /// Performs a conversion
     pub fn convert(&self) {
-        let dir = DocDir::new(&self.path).scan("md");
         let mut doc = String::new();
-        Self::combine(dir.clone(), &mut doc);
         let target = if self.output.is_dir() {
             self.output.join("doc.html")
         } else {
             self.output.with_extension("html")
         };
         if self.path.is_dir() {
+            let dir = DocDir::new(&self.path).scan("md");
+            Self::combine(dir.clone(), &mut doc);
+            doc = Self::add_pagebreakes(&doc);
             let md_path = self.output.join("doc.md");
             let mut file = fs::OpenOptions::new()
                 .truncate(true)
@@ -75,7 +76,6 @@ impl ComrakConvert {
                 .write(true)
                 .open(&md_path)
                 .unwrap();
-            doc = Self::add_pagebreakes(&doc);
             file.write_all(doc.as_bytes()).unwrap();
         } else {
             let mut file = fs::OpenOptions::new()
