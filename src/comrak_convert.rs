@@ -59,7 +59,7 @@ impl ComrakConvert {
     ///
     /// Performs a conversion
     pub fn convert(&self) {
-        let dir = DocDir::new(&self.path).scan();
+        let dir = DocDir::new(&self.path).scan("md");
         let mut doc = String::new();
         Self::combine(dir.clone(), &mut doc);
         doc = Self::add_pagebreakes(&doc);
