@@ -1,5 +1,6 @@
 use std::{fs, io::{Read, Write}, path::{Path, PathBuf}};
 
+use image::{DynamicImage, ImageFormat};
 use regex::Regex;
 
 use crate::doc_dir::DocDir;
@@ -55,6 +56,29 @@ impl ComrakConvert {
             prev_is_empty = re_is_empty.is_match(line);
         }
         doc
+    }
+    ///
+    /// Embedding images into Html
+    fn embedd_images(html: &str, assets: &Path) -> String {
+        let re = Regex::new("").unwrap();
+        for item in re.captures_iter(html) {
+            // <img src="data:image/gif;base64,">
+            // let mut file = fs::OpenOptions::new()
+            //     .read(true)
+            //     .open(&self.path)
+            //     .unwrap();
+        
+            // let img = image::load(&data.clone()).unwrap();
+            // println!("{}", image_to_base64(&img));
+        }
+        String::new()
+    }
+    fn image_to_base64(img: &DynamicImage) -> String {
+        let mut image_data: Vec<u8> = Vec::new();
+        img.write_to(&mut std::io::Cursor::new(&mut image_data), ImageFormat::Png)
+            .unwrap();
+        let res_base64 = base64::encode(image_data);
+        format!("data:image/png;base64,{}", res_base64)
     }
     ///
     /// Performs a conversion

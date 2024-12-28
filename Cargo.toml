@@ -20,3 +20,7 @@ comrak = "^0.32"
 #
 # Cli
 clap = "^4.5"
+#
+# Images
+image = "^0.25"
+base64 = "^0.22"
