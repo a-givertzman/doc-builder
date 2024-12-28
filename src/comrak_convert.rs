@@ -17,6 +17,7 @@ pub struct ComrakConvert {
 //
 //
 impl ComrakConvert {
+    const PAGEBREAK: &str = "======================pagebreak======================";
     ///
     /// Returns ComracConvert new instance
     /// - `path` - folder with markdown documents
@@ -28,12 +29,40 @@ impl ComrakConvert {
             template: template.as_ref().to_path_buf(),
         }
     }
+    /// 
+    /// Add page brakes
+    fn add_pagebreakes(doc: &str) -> String {
+        let lines: Vec<&str> = doc.split("\n").collect();
+        let mut doc = String::new();
+        if let Some(line) = lines.first() {
+            doc.push_str(line);
+            doc.push_str("\n");
+        }
+        let mut prev_is_empty = false;
+        let re_is_empty = Regex::new(r#"(^\s*$)"#).unwrap();
+        for line in lines.into_iter().skip(1) {
+            if line.starts_with("# ") {
+                if !prev_is_empty {
+                    doc.push_str("\n\n");
+                }
+                doc.push_str(Self::PAGEBREAK);
+                doc.push_str("\n\n");
+            }
+            doc.push_str(line);
+            doc.push_str("\n");
+            prev_is_empty = re_is_empty.is_match(line);
+        }
+        // let re = Regex::new(r#"(^# )"#).unwrap();
+        // doc = String::from(re.replace_all(&doc, format!("\n\n{}\n\n$1", Self::PAGEBREAK)));
+        doc
+    }
     ///
     /// Performs a conversion
     pub fn convert(&self) {
         let dir = DocDir::new(&self.path).scan();
         let mut doc = String::new();
         Self::combine(dir.clone(), &mut doc);
+        doc = Self::add_pagebreakes(&doc);
         let target = self.assets.parent().unwrap().join("doc.html");
         let md_path = self.assets.parent().unwrap().join("doc.md");
         let mut file = fs::OpenOptions::new()
@@ -43,10 +72,11 @@ impl ComrakConvert {
             .open(&md_path)
             .unwrap();
         file.write_all(doc.as_bytes()).unwrap();
+        // doc = fs::read_to_string(&md_path).unwrap();
         let html = Self::comrack_parse(&doc);
         let template = fs::read_to_string(&self.template).unwrap();
         let html = template.replace("content", &html);
-        let html = html.replace("======================pagebreak======================", "<div class=\"pagebreak\"> </div>");
+        let html = html.replace(Self::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
         let html = html.replace("\"/assets", "\"./assets");
         let mut file = fs::OpenOptions::new()
             .truncate(true)
@@ -112,8 +142,10 @@ impl ComrakConvert {
             }
             doc.push_str("\n\n");
         }
-        doc.push_str("\n\n");
-        doc.push_str("======================pagebreak======================");
+        if !doc.ends_with("\n\n") {
+            doc.push_str("\n\n");
+        }
+        doc.push_str(Self::PAGEBREAK);
         doc.push_str("\n\n");
     }
     ///
