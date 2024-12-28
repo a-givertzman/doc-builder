@@ -65,7 +65,7 @@ impl ComrakConvert {
         let re = Regex::new(r#"(<img\s+?src=")(.*?)(".*?/>)"#).unwrap();
         let mut las_match = 0;
         for item in re.captures_iter(html) {
-            log::debug!("embedd_images | img: {:?}", item.get(1));
+            // log::debug!("embedd_images | img: {:?}", item.get(1));
             if let (Some(prefix), Some(path), Some(sufix)) = (item.get(1), item.get(2), item.get(3)) {
                 let path = if path.as_str().starts_with("/") {
                     assets.join(path.as_str().trim_start_matches("/"))
@@ -89,8 +89,8 @@ impl ComrakConvert {
             &html[las_match..]
         );
 
-        // result
-        html.to_owned()
+        result
+        // html.to_owned()
     }
     fn image_to_base64(img: &DynamicImage) -> String {
         let mut image_data: Vec<u8> = Vec::new();
