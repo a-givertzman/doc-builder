@@ -1,5 +1,6 @@
 use std::{fs, io::{Read, Write}, path::{Path, PathBuf}};
 
+use base64::{engine::general_purpose, Engine};
 use image::{DynamicImage, ImageFormat};
 use regex::Regex;
 
@@ -77,7 +78,7 @@ impl ComrakConvert {
         let mut image_data: Vec<u8> = Vec::new();
         img.write_to(&mut std::io::Cursor::new(&mut image_data), ImageFormat::Png)
             .unwrap();
-        let res_base64 = base64::encode(image_data);
+        let res_base64 = general_purpose::STANDARD.encode(image_data);
         format!("data:image/png;base64,{}", res_base64)
     }
     ///
