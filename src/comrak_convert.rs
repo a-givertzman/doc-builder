@@ -61,18 +61,36 @@ impl ComrakConvert {
     ///
     /// Embedding images into Html
     fn embedd_images(html: &str, assets: &Path) -> String {
-        let re = Regex::new("").unwrap();
+        let mut result = String::new();
+        let re = Regex::new(r#"(<img\s+?src=")(.*?)(".*?/>)"#).unwrap();
+        let mut las_match = 0;
         for item in re.captures_iter(html) {
-            // <img src="data:image/gif;base64,">
-            // let mut file = fs::OpenOptions::new()
-            //     .read(true)
-            //     .open(&self.path)
-            //     .unwrap();
-        
-            // let img = image::load_from_memory(&data.clone()).unwrap();
-            // println!("{}", image_to_base64(&img));
+            log::debug!("embedd_images | img: {:?}", item.get(1));
+            if let (Some(prefix), Some(path), Some(sufix)) = (item.get(1), item.get(2), item.get(3)) {
+                let path = if path.as_str().starts_with("/") {
+                    assets.join(path.as_str().trim_start_matches("/"))
+                } else {
+                    assets.join(path.as_str())
+                };
+                log::debug!("embedd_images | reading img: {:?}...", path);
+                let img = image::ImageReader::open(&path).unwrap().decode().unwrap();
+                log::debug!("embedd_images | reading img: {:?} - Ok", path);
+                let img = Self::image_to_base64(&img);
+                let img = format!("{}{}{}", prefix.as_str(), img, sufix.as_str());
+                // <img src="">
+                result.push_str(
+                    &html[las_match..prefix.start()]
+                );
+                result.push_str(&img);                
+                las_match = sufix.end();
+            }
         }
-        String::new()
+        result.push_str(
+            &html[las_match..]
+        );
+
+        // result
+        html.to_owned()
     }
     fn image_to_base64(img: &DynamicImage) -> String {
         let mut image_data: Vec<u8> = Vec::new();
@@ -111,6 +129,7 @@ impl ComrakConvert {
             doc = Self::add_pagebreakes(&doc);
         };
         let html = Self::comrack_parse(&doc);
+        let html = Self::embedd_images(&html, &self.assets);
         let template = fs::read_to_string(&self.template).unwrap();
         let html = template.replace("content", &html);
         let html = html.replace(Self::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
