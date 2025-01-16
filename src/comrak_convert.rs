@@ -1,4 +1,4 @@
-use std::{fs, io::{Read, Write}, path::{Path, PathBuf}};
+use std::{fs, io::{BufRead, BufReader, Read, Write}, path::{Path, PathBuf}, sync::Arc};
 
 use base64::{engine::general_purpose, Engine};
 use image::{DynamicImage, ImageFormat};
@@ -20,6 +20,7 @@ pub struct ComrakConvert {
 //
 //
 impl ComrakConvert {
+    const CONTENT: &str = "======================content======================";
     const PAGEBREAK: &str = "======================pagebreak======================";
     ///
     /// Returns ComracConvert new instance
@@ -65,30 +66,55 @@ impl ComrakConvert {
         let re = Regex::new(r#"(<img\s+?src=")(.*?)(".*?/>)"#).unwrap();
         let mut las_match = 0;
         for item in re.captures_iter(html) {
-            // log::debug!("embedd_images | img: {:?}", item.get(1));
+            // log::debug!("embedd_images | img: {:?}", item.get(2));
             if let (Some(prefix), Some(path), Some(sufix)) = (item.get(1), item.get(2), item.get(3)) {
+                result.push_str(
+                    &html[las_match..prefix.start()]
+                );
                 let path = if path.as_str().starts_with("/") {
                     assets.join(path.as_str().trim_start_matches("/"))
                 } else {
                     assets.join(path.as_str())
                 };
-                log::debug!("embedd_images | reading img: {:?}...", path);
-                let img = image::ImageReader::open(&path).unwrap().decode().unwrap();
-                log::debug!("embedd_images | reading img: {:?} - Ok", path);
-                let img = Self::image_to_base64(&img);
-                let img = format!("{}{}{}", prefix.as_str(), img, sufix.as_str());
-                // <img src="">
-                result.push_str(
-                    &html[las_match..prefix.start()]
-                );
-                result.push_str(&img);                
+                // let path = Path::new(path.as_str());
+                if let Some(ext) = path.extension().and_then(std::ffi::OsStr::to_str) {
+                    match ext {
+                        "svg" => {
+                            log::debug!("embedd_images | SVG img: {:?}", path);
+                            match std::fs::File::open(&path) {
+                                Ok(file) => {
+                                    let mut img = String::new();
+                                    let lines = BufReader::new(file).read_to_string(&mut img);
+                                    // let lines = lines
+                                    //     .map_while(Result::ok)
+                                    //     .skip_while(|line| {
+                                    //         line.starts_with("<svg")
+                                    //     });
+                                    // let img: String = lines.collect();
+                                    result.push_str(&img);
+                                }
+                                Err(err) => {
+                                    log::warn!("embedd_images | Error read img file: '{:?}': \n\t{:?}", path, err);
+                                }
+                            }
+                        }
+                        _ => {
+                            //     log::debug!("embedd_images | reading img: {:?}...", path);
+                            //     let img = image::ImageReader::open(&path).unwrap().decode().unwrap();
+                            //     log::debug!("embedd_images | reading img: {:?} - Ok", path);
+                            //     let img = Self::image_to_base64(&img);
+                            //     let img = format!("{}{}{}", prefix.as_str(), img, sufix.as_str());
+                            //     // <img src="">
+                                // result.push_str(&img);
+                        }
+                    }
+                }
                 las_match = sufix.end();
             }
         }
         result.push_str(
             &html[las_match..]
         );
-
         result
         // html.to_owned()
     }
@@ -129,9 +155,9 @@ impl ComrakConvert {
             doc = Self::add_pagebreakes(&doc);
         };
         let html = Self::comrack_parse(&doc);
-        // let html = Self::embedd_images(&html, &self.assets);
+        let html = Self::embedd_images(&html, &self.assets);
         let template = fs::read_to_string(&self.template).unwrap();
-        let html = template.replace("content", &html);
+        let html = template.replace(Self::CONTENT, &html);
         let html = html.replace(Self::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
         let html = html.replace("\"/assets", "\"./assets");
         let mut file = fs::OpenOptions::new()
@@ -146,7 +172,7 @@ impl ComrakConvert {
     ///
     /// Returns marckdown `document` combined from md files
     fn combine(dir: DocDir, doc: &mut String) {
-        println!("\n{:?}", dir.path);
+        log::debug!("\npath: '{:?}'", dir.path);
         let first = dir.children.iter().find(|child| {
             (!child.is_dir) && child.header() == dir.header()
         });
@@ -234,7 +260,11 @@ impl ComrakConvert {
                     .subscript(true)
                     .spoiler(true)
                     .greentext(true)
-                    // .image_url_rewriter(true)
+                    .image_url_rewriter(Arc::new(|url: &str| {
+                        log::debug!("url: {}", url);
+                        // format!("https://safe.example.com?url={}", url)
+                        url.to_owned()
+                    }))
                     // .link_url_rewriter(true)
                     .build(),
                 parse: comrak::ParseOptions::builder()

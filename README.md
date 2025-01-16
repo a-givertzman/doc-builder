@@ -1,7 +1,8 @@
 # Converts markdown files to the solid html document
 
-Required folder structure 
-```
+## Required folder structure
+
+```markdown
 .
 ├── ...
 ├── doc                    # Documentation files
@@ -33,7 +34,30 @@ Required folder structure
 └── ...
 ```
 
-Execute in cli
+## Execute in cli
+
+- Having folders:
+
+```markdown
+├── doc                    # Documentation files
+│   ├── assets             # Assets files 
+│   │   ├── img.svg             # Image files...
+│   │   └── ...
+│   ├── html               # Target folder, where generated htm to be stored
+│   │   ├── doc.md              # Target solid markdown document to be crated
+│   │   └── doc.html            # Target solid html document to be crated
+│   ├── algorithm          # Source md folders ans files 
+│   │   ├── algorithm.md        # Contains a header of the algorithm
+│   │   ├── part01              # Part 1 of algorithms
+│   │   └── ...
+│   └── ...
+└── ...
+
+```
+
+- Use command:
+
 ```bash
 cargo run --release -- path/to/md's/ --assets ./assets --output ./target
+cargo run --release -- ./doc/md/ --assets ./doc/ --output ./doc/html/
 ```
