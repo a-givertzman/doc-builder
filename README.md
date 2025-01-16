@@ -34,6 +34,11 @@
 └── ...
 ```
 
+## Assets
+
+- SVG images will be embedded into the HTML code
+- Other kind of images will be loaded by the ref
+
 ## Execute in cli
 
 - Having folders:
