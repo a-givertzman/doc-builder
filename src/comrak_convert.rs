@@ -76,7 +76,6 @@ impl ComrakConvert {
                 } else {
                     assets.join(path.as_str())
                 };
-                // let path = Path::new(path.as_str());
                 if let Some(ext) = path.extension().and_then(std::ffi::OsStr::to_str) {
                     match ext {
                         "svg" => {
@@ -84,17 +83,17 @@ impl ComrakConvert {
                             match std::fs::File::open(&path) {
                                 Ok(file) => {
                                     let mut img = String::new();
-                                    let lines = BufReader::new(file).read_to_string(&mut img);
-                                    // let lines = lines
-                                    //     .map_while(Result::ok)
-                                    //     .skip_while(|line| {
-                                    //         line.starts_with("<svg")
-                                    //     });
-                                    // let img: String = lines.collect();
-                                    result.push_str(&img);
+                                    match BufReader::new(file).read_to_string(&mut img) {
+                                        Ok(_) => {
+                                            result.push_str(&img);
+                                        }
+                                        Err(err) => {
+                                            log::warn!("embedd_images | Error read img file: '{:?}': \n\t{:?}", path, err);
+                                        }
+                                    }
                                 }
                                 Err(err) => {
-                                    log::warn!("embedd_images | Error read img file: '{:?}': \n\t{:?}", path, err);
+                                    log::warn!("embedd_images | Error acces img file: '{:?}': \n\t{:?}", path, err);
                                 }
                             }
                         }
@@ -159,7 +158,7 @@ impl ComrakConvert {
         let template = fs::read_to_string(&self.template).unwrap();
         let html = template.replace(Self::CONTENT, &html);
         let html = html.replace(Self::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
-        let html = html.replace("\"/assets", "\"./assets");
+        // let html = html.replace("\"/assets", "\"./assets");
         let mut file = fs::OpenOptions::new()
             .truncate(true)
             .create(true)
