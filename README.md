@@ -65,5 +65,5 @@ cargo run --release -- ./doc/algorithm/ --assets ./doc/assets --output ./doc/htm
 or
 
 ```bash
-cargo run --release -- ./doc/md/ --assets ./doc/assets/ --output ./doc/html/doc.html
+cargo run --release -- ./doc/algorithm/ --assets ./doc/assets/ --output ./doc/html/doc.html
 ```
