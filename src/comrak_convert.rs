@@ -30,7 +30,7 @@ impl ComrakConvert {
         Self {
             path: path.as_ref().to_path_buf(),
             output: output.as_ref().to_path_buf(),
-            assets: assets.as_ref().to_path_buf(),
+            assets: assets.as_ref().parent().unwrap_or(assets.as_ref()) .to_path_buf(),
             template: template.as_ref().to_path_buf(),
         }
     }
@@ -137,7 +137,7 @@ impl ComrakConvert {
             let dir = DocDir::new(&self.path).scan("md");
             Self::combine(dir.clone(), &mut doc);
             doc = Self::add_pagebreakes(&doc);
-            let md_path = self.output.join("doc.md");
+            let md_path = self.output.with_extension("md");
             let mut file = fs::OpenOptions::new()
                 .truncate(true)
                 .create(true)

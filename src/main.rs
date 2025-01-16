@@ -19,7 +19,7 @@ fn main() {
             // let assets = PathBuf::from("sss/assets");
             let path = PathBuf::from(cli.name);
             let assets = match cli.assets {
-                Some(assets) => PathBuf::from(assets).parent().unwrap().to_owned(),
+                Some(assets) => PathBuf::from(assets),
                 None => PathBuf::from("./"),
             };
             let output = match cli.output {
