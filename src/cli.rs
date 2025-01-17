@@ -14,7 +14,12 @@ pub struct Cli {
     pub output: Option<String>,
     /// 
     /// Assets path
-    /// -assets
+    /// --assets
     #[arg(long)]
     pub assets: Option<String>,
+    ///
+    /// Template
+    /// --template
+    #[arg(long)]
+    pub template: Option<String>,
 }

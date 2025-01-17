@@ -1,329 +1,233 @@
-# Судно
+<!-- <title>Титульный лист</title> -->
 
-|Параметр|Значение|
+<!-- <P> <CENTER> <img src="./assets/sa_lab.png" width="200" height="120" alt="Emblem"> </CENTER> </P>
+
+<P> <CENTER> BoardTrix </CENTER>
+
+<HR SIZE=4 WIDTH=100% NOSHADE ALIGN=CENTER>
+
+<TABLE WIDTH=100%>
+
+</TABLE>
+
+<BR> <BR> <BR> <BR> <BR><BR> <BR> <BR> <BR> <BR>
+
+<P><FONT SIZE=6>
+
+<CENTER><B> Test calculations </B> </FONT> </CENTER>
+
+<CENTER><B> General dry cargo ship Sofia (IMO№ 9245263) </B> </FONT> </CENTER>
+
+<CENTER><B> Calculation of strength and stability </B> </FONT> </CENTER>
+
+<BR> <BR> <BR> <BR> <BR> <BR> <BR> <BR> <BR> <BR> <BR> 
+
+<B> <div align="left">Approve\_\_\_\_\_\_\_\_\_\_\_\_\_captain\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ </div> </B> </FONT> 
+
+<BR> <BR>
+
+<P> <CENTER> 2025 </CENTER> -->
+
+# Ship
+
+|Parameter|Value|
 |---|---|
-|Наименование судна|Sofia|
-|Позывной|UACA5|
-|Номер ИМО|9245263|
+|Ship name|Sofia|
+|Call sign|UACA5|
+|IMO number|9245263|
 |MMSI|273251830|
-|Тип судна|General dry cargo ship|
-|Район плавания|Unrestricted|
-|Классификационное общество|RS|
-|Регистровый номер|10869|
-|Порт приписки|Novorossiysk|
-|Флаг приписки|Russian Federation|
-|Судовладелец|LLC "Кubаn Маrinе Cоmраnу"|
-|Код судовладельца|-|
-|Верфь постройки|Westerbroek|
-|Место постройки|the Netherlands|
-|Год постройки|2002|
-|Заводской номер|506|
+|Type of ship|General dry cargo ship|
+|Navigation area|Unrestricted|
+|Classification society|RS|
+|Registration number|10869|
+|Port of registry|Novorossiysk|
+|Flag|Russian Federation|
+|Shipowner|LLC "Кubаn Маrinе Cоmраnу"|
+|Shipowner code|-|
+|Builder|Westerbroek|
+|Place of build|the Netherlands|
+|Year of build|2002|
+|Shipbuilder hull number|506|
   
-# Рейс
+# Voyage
 
-|Наименование|Значение|
+|Name|Value|
 |---|---|
-|Код рейса|Voyage code|
-|Акватория|sea|
-|Плотность забортной воды $[т/м^3]$|1.025|
-|Грузовая марка|Summer|
-|Обледенение|none|
-|Описание рейса|Voyage description|
+|Voyage Code|Voyage code|
+|Water area|sea|
+|Seawater density $[t/m^3]$|1.025|
+|Load Line|Summer|
+|Icing|none|
+|Voyage description|Voyage description|
   
+# Itinerary
 
-# Маршрут
-
-|Порт|Код порта|ETA|ETD|Макс. осадка [м]|
+|Port|Port code|ETA|ETD|Max. draft [m]|
 |---|---|---|---|---|
   
+# Displacement
 
-# Водоизмещение
+## Total
 
-## Итого
-
-|№|Наименование|Размерность|Значение|
+|№|Name|Dimension|Value|
 |---|---|---|---|
-|2|Водоизмещение весовое|т|14067.588|
-|32|Абсцисса центра тяжести|м|63.612|
-|56|Абсцисса центра тяжести от кормового перпендикуляра|м|63.612|
-|12|Аппликата центра тяжести|м|6.368|
-|1|Аппликата центра тяжести исправленная|м|6.540|
-|52|Ордината центра тяжести|м|-0.000|
+|2|Displacement|t|14067.588|
+|32|Longitudinal center of gravity|m|63.612|
+|56|Longitudinal center of gravity, from AP|m|63.612|
+|12|Vertical centre of gravity|m|6.368|
+|1|Vertical centre of gravity fixed|m|6.540|
+|52|Transverse center of gravity|m|-0.000|
   
+## Ballast tanks
 
-
-## Балластные цистерны
-
-|Наименование|Масса|$x_g$ [м]|$y_g$ [м]|$z_g$ [м]|$M_{f.sx}$ [тм]|
+|Name|Weight|$x_g$ [m]|$y_g$ [m]|$z_g$ [m]|$M_{f.sx}$ [tm]|
 |---|---|---|---|---|---|
-|Танк ДД 1 ДП|20.658|92.230|0.000|0.050|1037.579|
-|Танк ДД 1 ЛБ|-|-|-|-|-|
-|Танк ДД 1 Пр.Б|-|-|-|-|-|
-|Танк ДД 2 ДП|71.400|75.210|0.000|0.550|0.000|
-|Танк ДД 2 ЛБ|-|-|-|-|-|
-|Танк ДД 2 Пр.Б|128.348|86.398|5.806|0.570|0.000|
-|Танк ДД 3 ДП|240.200|57.450|0.000|0.550|0.000|
-|Танк ДД 3 ЛБ|-|-|-|-|-|
-|Танк ДД 3 Пр.Б|109.214|58.190|5.841|0.567|0.000|
-|Танк ДД 4 ДП|129.800|36.360|0.000|0.550|0.000|
-|Танк ДД 4 ЛБ|87.100|31.024|-4.318|0.400|542.162|
-|Танк ДД 4 Пр.Б|104.000|30.968|4.340|0.470|546.647|
-|Диптанк|-|-|-|-|-|
-|Форпик|-|-|-|-|-|
-|Борт. танк 1 ЛБ|-|-|-|-|-|
-|Борт. танк 1 Пр.Б|-|-|-|-|-|
-|Борт. танк 2 ЛБ|-|-|-|-|-|
-|Борт. танк 2 Пр.Б|-|-|-|-|-|
-|Борт. танк 3 ЛБ|-|-|-|-|-|
-|Борт. танк 3 Пр.Б|-|-|-|-|-|
-|Борт. танк 4 ЛБ|-|-|-|-|-|
-|Борт. танк 4 Пр.Б|-|-|-|-|-|
-|Борт. танк 7 ЛБ|-|-|-|-|-|
-|Борт. танк 7 Пр.Б|-|-|-|-|-|
-|Ахтерпик ЛБ|-|-|-|-|-|
-|Ахтерпик Пр.Б|-|-|-|-|-|
+|DBottom Tank 1C|20.658|92.230|0.000|0.050|1037.579|
+|DBottom Tank 1P|-|-|-|-|-|
+|DBottom Tank 1S|-|-|-|-|-|
+|DBottom Tank 2C|71.400|75.210|0.000|0.550|0.000|
+|DBottom Tank 2P|-|-|-|-|-|
+|DBottom Tank 2S|128.348|86.398|5.806|0.570|0.000|
+|DBottom Tank 3C|240.200|57.450|0.000|0.550|0.000|
+|DBottom Tank 3P|-|-|-|-|-|
+|DBottom Tank 3S|109.214|58.190|5.841|0.567|0.000|
+|DBottom Tank 4C|129.800|36.360|0.000|0.550|0.000|
+|DBottom Tank 4P|87.100|31.024|-4.318|0.400|542.162|
+|DBottom Tank 4S|104.000|30.968|4.340|0.470|546.647|
+|Deep Tank|-|-|-|-|-|
+|Fore Peak Tank|-|-|-|-|-|
+|Side Tank 1P|-|-|-|-|-|
+|Side Tank 1S|-|-|-|-|-|
+|Side Tank 2P|-|-|-|-|-|
+|Side Tank 2S|-|-|-|-|-|
+|Side Tank 3P|-|-|-|-|-|
+|Side Tank 3S|-|-|-|-|-|
+|Side Tank 4P|-|-|-|-|-|
+|Side Tank 4S|-|-|-|-|-|
+|Side Tank 7P|-|-|-|-|-|
+|Side Tank 7S|-|-|-|-|-|
+|Stem Tank P|-|-|-|-|-|
+|Stem Tank S|-|-|-|-|-|
   
+## Stores tanks
 
-
-## Цистерны запаса
-
-|Наименование|Масса|$x_g$ [м]|$y_g$ [м]|$z_g$ [м]|$M_{f.sx}$ [тм]|
+|Name|Weight|$x_g$ [m]|$y_g$ [m]|$z_g$ [m]|$M_{f.sx}$ [tm]|
 |---|---|---|---|---|---|
-|Борт. цистерна 4 ЛБ|36.300|2.664|-1.570|6.384|48.681|
-|Борт. цистерна 4 Пр.Б|36.300|2.661|1.551|6.379|48.993|
-|Цистерна льяльных вод|0.700|11.750|1.115|0.163|1.764|
-|Цистерна слива холодной воды|-|-|-|-|-|
-|Цистерна грязного масла|0.900|14.506|-1.375|0.121|5.335|
-|Палубный колодец|-|-|-|-|-|
-|Цистерна протечек газойля|0.500|15.124|1.469|0.138|3.245|
-|Расходная цистерна газойля 1|5.195|10.200|-4.597|7.982|0.272|
-|Расходная цистерна газойля 2|-|-|-|-|-|
-|Цистерна газойля 1|29.874|7.126|-5.566|8.328|16.367|
-|Цистерна газойля 2|-|-|-|-|-|
-|Цистерна расходного топлива|17.000|17.371|-3.796|7.944|4.838|
-|Цистерна отстойного топлива|19.700|17.496|-0.220|7.950|5.010|
-|Цистерна гидравлического масла 1|2.700|8.455|5.189|7.172|1.757|
-|Цистерна гидравлического масла 2|-|-|-|-|-|
-|Цистерна смазочного масла вспомогательного двигателя|3.668|8.452|5.713|8.851|3.231|
-|Цистерна смазочного масла главного двигателя|17.100|7.085|5.375|8.236|8.729|
-|Цистерна смазочного масла редуктора|-|-|-|-|-|
-|Переливная цистерна|11.300|17.200|0.000|0.539|13.855|
-|Авар. сточная цистерна|0.700|11.750|-1.115|0.163|1.764|
-|Шламовая цистерна|0.800|12.330|-4.233|4.238|3.629|
-|Борт. танк 5 ЛБ|107.900|27.704|-7.004|3.720|16.312|
-|Борт. танк 5 Пр.Б|107.900|27.704|7.004|3.720|16.312|
-|Борт. танк 6 ЛБ|77.800|15.971|-5.936|6.211|18.837|
-|Борт. танк 6 Пр.Б|99.600|15.888|5.597|6.402|36.235|
-|Цистерна котельного масла|-|-|-|-|-|
+|Back Tank 4P|36.300|2.664|-1.570|6.384|48.681|
+|Back Tank 4S|36.300|2.661|1.551|6.379|48.993|
+|Bilge W. Coll. Tank|0.700|11.750|1.115|0.163|1.764|
+|Cool Water Drain Tank|-|-|-|-|-|
+|Dirty Oil Tank|0.900|14.506|-1.375|0.121|5.335|
+|Deck Well|-|-|-|-|-|
+|Fuel Leak Oil Tank|0.500|15.124|1.469|0.138|3.245|
+|Gas Oil Day Tank|5.195|10.200|-4.597|7.982|0.272|
+|Gas Oil Day Tank 2|-|-|-|-|-|
+|Gas Oil Tank1|29.874|7.126|-5.566|8.328|16.367|
+|Gas Oil Tank2|-|-|-|-|-|
+|HFO Day Tank|17.000|17.371|-3.796|7.944|4.838|
+|HFO Settling Tank|19.700|17.496|-0.220|7.950|5.010|
+|Hydrolic Oil Tank 1|2.700|8.455|5.189|7.172|1.757|
+|Hydrolic Oil Tank 2|-|-|-|-|-|
+|Lub. Oil Aux. Eng..|3.668|8.452|5.713|8.851|3.231|
+|Lub. Oil Main Engine|17.100|7.085|5.375|8.236|8.729|
+|Lub. Oil Red. Eng.|-|-|-|-|-|
+|Overflow Tank|11.300|17.200|0.000|0.539|13.855|
+|Emg. Sewage Tank|0.700|11.750|-1.115|0.163|1.764|
+|Sludge Tank|0.800|12.330|-4.233|4.238|3.629|
+|Side Tank 5P|107.900|27.704|-7.004|3.720|16.312|
+|Side Tank 5S|107.900|27.704|7.004|3.720|16.312|
+|Side Tank 6P|77.800|15.971|-5.936|6.211|18.837|
+|Side Tank 6S|99.600|15.888|5.597|6.402|36.235|
+|Thermic Oil Tank|-|-|-|-|-|
   
+## Stores
 
-
-## Запасы
-
-|Наименование|Масса|$x_g$ [м]|$y_g$ [м]|$z_g$ [м]|
+|Name|Weight|$x_g$ [m]|$y_g$ [m]|$z_g$ [m]|
 |---|---|---|---|---|
 |Crew|40.000|58.900|0.000|7.500|
   
+## Bulkheads
 
-
-## Зерновые переборки
-
-|Наименование|Положение.|Масса|$x_g$ [м]|$y_g$ [м]|$z_g$ [м]|
+|Name|Position|Weight|$x_g$ [m]|$y_g$ [m]|$z_g$ [m]|
 |---|---|---|---|---|---|
-|Зерновая переборка №1|Трюм 1.  По-походному |40.000|74.016|0.000|6.530|
-|Зерновая переборка №2|Трюм 1.  По-походному |40.000|75.331|0.000|6.530|
+|Grain Bulkhead №1|Hold 1.Stowage Position|40.000|74.016|0.000|6.530|
+|Grain Bulkhead №2|Hold 1.Stowage Position|40.000|75.331|0.000|6.530|
   
+## Bulk cargo
 
-
-## Навалочный груз
-
-|Наименование|Масса|$x_g$ [м]|$y_g$ [м]|$z_g$ [м]|Кренящий момент от смещения зерна [тм]|
+|Name|Weight|$x_g$ [m]|$y_g$ [m]|$z_g$ [m]|Grain moment [tm]|
 |---|---|---|---|---|---|
-|Трюм №1 Шп. 102-156|4299.600|95.563|0.000|6.591|-|
-|Трюм №2 Шп. 28-99|5095.402|45.014|0.000|6.523|-|
+|Трюм №1 Fr. 102-156|4299.600|95.563|0.000|6.591|-|
+|Трюм №2 Fr. 28-99|5095.402|45.014|0.000|6.523|-|
   
+## Containers
 
-
-## Контейнеры
-
-|Наименование|BBRRTT|Масса|$x_g$ [м]|$y_g$ [м]|$z_g$ [м]|
+|Name|BBRRTT|Weight|$x_g$ [m]|$y_g$ [m]|$z_g$ [m]|
 |---|---|---|---|---|---|
   
+## General cargo
 
-
-## Генеральный груз
-
-|Наименование|Масса|$x_g$ [м]|$y_g$ [м]|$z_g$ [м]|
+|Name|Weight|$x_g$ [m]|$y_g$ [m]|$z_g$ [m]|
 |---|---|---|---|---|
   
+# Drafts
 
+All drafts are moulded.
 
-# Параметры посадки
-
-Осадки приведены по теоретической поверхности корпуса.
-
-|№|Наименование|Размерность|Значение|
+|№|Name|Dimension|Value|
 |---|---|---|---|
-|3|Осадка в цт площади ватерлинии|м|7.937|
-|4|Осадка на носовом перпендикуляре|м|7.275|
-|5|Осадка на кормовом перпендикуляре|м|8.525|
-|6|Дифферент|град|-0.549|
-|7|Статический угол крена судна|град|-0.047|
-|51|Дифферент|м|-1.250|
-|91|Осадка на носовых марках ПрБ|м|7.284|
-|92|Осадка на носовых марках ЛБ|м|7.285|
-|93|Осадка на носовых марках осредненная|м|7.285|
+|3|Draft at center of flotation|m|7.937|
+|4|Draft at FP|m|7.275|
+|5|Draft at AP|m|8.525|
+|6|Trim|deg|-0.549|
+|7|Heel|deg|-0.047|
+|51|Trim|m|-1.250|
+|91|Draft fwd at marks SB|m|7.284|
+|92|Draft fwd at marks PS|m|7.285|
+|93|Draft fwd at marks mean|m|7.285|
+  
+# Strength
 
-# Прочность
+## Max shear forces
 
-## Максимальные изгибающие моменты
+![chart](./assets/bm_chart.svg)
 
-![Изгибающие моменты](assets/img1.svg)
-
-|X|$BM_{min}$|$BM$|$BM_{max}$|Статус|
+|X|$BM_{min}$|$BM$|$BM_{max}$|Status|
 |---|---|---|---|---|
 |14.483|-110.507|14.074|86.516|+|
 |14.483|-110.507|16.268|86.516|+|
 
+## Max bending moments
 
-## Максимальные перерезывающие силы 
+![chart](./assets/sf_chart.svg)
 
-![Перерезывающие силы](assets/img2.svg)
-
-|X|$SF_{min}$|$SF$|$SF_{max}$|Статус|
+|X|$SF_{min}$|$SF$|$SF_{max}$|Status|
 |---|---|---|---|---|
 |18.656|-12.461|-1.366|12.461|+|
 |18.656|-12.461|10.962|12.461|+|
 
-# Остойчивость
+# Stability
 
-## Критерии
+## Criterions
 
-|№|Наименование|Размерность|Значение|Допустимое значение|Статуc|
+|№|Name|Dimension|Value|Allow|Status|
 |---|---|---|---|---|---|
-|2|Статический крен от ветра|град|4.644|16.000|+|
-|3|Площадь ДСО до 30°|м∙рад|0.069|0.055|+|
-|5|Площадь ДСО до 40°|м∙рад|0.136|0.090|+|
-|6|Площадь ДСО от 30° до 40°|м∙рад|0.068|0.030|+|
-|7|Максимальное плечо ДСО|м|0.568|0.200|+|
-|10|Максимальный угол ДСО|град|51.600|30.000|+|
-|12|Исправленная метацентрическая высота|м|0.355|0.150|+|
-|17|Минимальная метацентрическая высота деления на отсеки|м|0.355|0.303|+|
-|101|Осадка по летнюю ГВЛ ПрБ|м|7.894|8.012|+|
-|102|Осадка по летнюю ГВЛ ЛБ|м|7.907|8.012|+|
+|2|Wind static heel|deg|4.644|16.000|+|
+|3|Area of LC up to 30°|m•rad|0.069|0.055|+|
+|5|Area of LC up to 40°|m•rad|0.136|0.090|+|
+|6|Area of LC between 30° & 40°|m•rad|0.068|0.030|+|
+|7|Maximum LC|m|0.568|0.200|+|
+|10|Heel with maximum LC|deg|51.600|30.000|+|
+|12|Min. metacentric height|m|0.355|0.150|+|
+|17|Min. metacentric height due to subdivision index|m|0.355|0.303|+|
+|101|Summer LL draft SB|m|7.894|8.012|+|
+|102|Summer LL draft PS|m|7.907|8.012|+|
   
+## Stability curve
 
+![chart](./assets/dso_chart.svg)
 
-## Диаграмма статической остойчивости
-
-<svg width="600" height="400" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
-<rect x="0" y="0" width="600" height="400" fill="#FFFFFF"/>
-<g>
-<line stroke-width="2" x1="271" y1="45" x2="296" y2="45" stroke="#5470C6"/>
-<circle cx="283.5" cy="45" r="5.5" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<text font-size="14" x="299" y="49" font-family="Roboto" fill="#464646">
-ДСО
-</text>
-</g>
-<g stroke="#E0E6F2">
-<line stroke-width="1" x1="58" y1="62" x2="595" y2="62"/><line stroke-width="1" x1="58" y1="112.5" x2="595" y2="112.5"/><line stroke-width="1" x1="58" y1="163" x2="595" y2="163"/><line stroke-width="1" x1="58" y1="213.5" x2="595" y2="213.5"/><line stroke-width="1" x1="58" y1="264" x2="595" y2="264"/><line stroke-width="1" x1="58" y1="314.5" x2="595" y2="314.5"/>
-</g>
-<g>
-
-<text font-size="14" x="2" y="67" font-family="Roboto" fill="#6E7079">
-DSO, m
-</text>
-<text font-size="14" x="2" y="117.5" font-family="Roboto" fill="#6E7079">
-DSO, m
-</text>
-<text font-size="14" x="2" y="168" font-family="Roboto" fill="#6E7079">
-DSO, m
-</text>
-<text font-size="14" x="2" y="218.5" font-family="Roboto" fill="#6E7079">
-DSO, m
-</text>
-<text font-size="14" x="2" y="269" font-family="Roboto" fill="#6E7079">
-DSO, m
-</text>
-<text font-size="14" x="2" y="319.5" font-family="Roboto" fill="#6E7079">
-DSO, m
-</text>
-<text font-size="14" x="2" y="370" font-family="Roboto" fill="#6E7079">
-DSO, m
-</text>
-</g>
-<g>
-<g stroke="#6E7079">
-<line stroke-width="1" x1="58" y1="365" x2="595" y2="365"/>
-<line stroke-width="1" x1="58" y1="365" x2="58" y2="370"/>
-<line stroke-width="1" x1="102.8" y1="365" x2="102.8" y2="370"/>
-<line stroke-width="1" x1="147.5" y1="365" x2="147.5" y2="370"/>
-<line stroke-width="1" x1="192.2" y1="365" x2="192.2" y2="370"/>
-<line stroke-width="1" x1="237" y1="365" x2="237" y2="370"/>
-<line stroke-width="1" x1="281.8" y1="365" x2="281.8" y2="370"/>
-<line stroke-width="1" x1="326.5" y1="365" x2="326.5" y2="370"/>
-<line stroke-width="1" x1="371.2" y1="365" x2="371.2" y2="370"/>
-<line stroke-width="1" x1="416" y1="365" x2="416" y2="370"/>
-<line stroke-width="1" x1="460.8" y1="365" x2="460.8" y2="370"/>
-<line stroke-width="1" x1="505.5" y1="365" x2="505.5" y2="370"/>
-<line stroke-width="1" x1="550.2" y1="365" x2="550.2" y2="370"/>
-<line stroke-width="1" x1="595" y1="365" x2="595" y2="370"/>
-</g>
-<text font-size="14" x="76.4" y="384" font-family="Roboto" fill="#6E7079">
-0
-</text>
-<text font-size="14" x="121.1" y="384" font-family="Roboto" fill="#6E7079">
-5
-</text>
-<text font-size="14" x="161.9" y="384" font-family="Roboto" fill="#6E7079">
-10
-</text>
-<text font-size="14" x="206.6" y="384" font-family="Roboto" fill="#6E7079">
-15
-</text>
-<text font-size="14" x="251.4" y="384" font-family="Roboto" fill="#6E7079">
-20
-</text>
-<text font-size="14" x="296.1" y="384" font-family="Roboto" fill="#6E7079">
-25
-</text>
-<text font-size="14" x="340.9" y="384" font-family="Roboto" fill="#6E7079">
-30
-</text>
-<text font-size="14" x="385.6" y="384" font-family="Roboto" fill="#6E7079">
-35
-</text>
-<text font-size="14" x="430.4" y="384" font-family="Roboto" fill="#6E7079">
-40
-</text>
-<text font-size="14" x="475.1" y="384" font-family="Roboto" fill="#6E7079">
-45
-</text>
-<text font-size="14" x="519.9" y="384" font-family="Roboto" fill="#6E7079">
-50
-</text>
-<text font-size="14" x="564.6" y="384" font-family="Roboto" fill="#6E7079">
-55
-</text>
-</g>
-<g>
-<path d="M 80.4 213.5 L 125.1 211.9 L 169.9 210 L 214.6 207.6 L 259.4 204.4 L 304.1 201.4 L 348.9 198 L 393.6 193.9 L 438.4 190 L 483.1 186.8 L 527.9 184.9 L 572.6 185.2" stroke-width="2" fill="none" stroke="#5470C6"/>
-<circle cx="80.4" cy="213.5" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="125.1" cy="211.9" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="169.9" cy="210" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="214.6" cy="207.6" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="259.4" cy="204.4" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="304.1" cy="201.4" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="348.9" cy="198" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="393.6" cy="193.9" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="438.4" cy="190" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="483.1" cy="186.8" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="527.9" cy="184.9" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-<circle cx="572.6" cy="185.2" r="2" stroke-width="2" stroke="#5470C6" fill="#FFFFFF"/>
-</g>
-</svg>
-
-| Крен | Плечо расчет |
+| Heel | Lever |
 |---|---|
 |0|-0.000|
 |5|0.033|
@@ -338,46 +242,43 @@ DSO, m
 |50|0.566|
 |55|0.560|
 
+## Stability
 
-## Параметры остойчивости
-
-|№|Наименование|Размерность|Значение|
+|№|Name|Dimension|Value|
 |---|---|---|---|
-|8|Число тонн на 1 см осадки|т|19.877|
-|9|Момент кренящий на 1 градус|т∙м|87.187|
-|10|Момент дифферентующий на 1 см осадки|т∙м/см|189.175|
-|11|Аппликата центра величины|м|4.158|
-|13|Поперечный метацентрический радиус|м|2.737|
-|14|Аппликата поперечного метацентра|м|6.895|
-|15|Поперечная метацентрическая высота|м|0.528|
-|16|Поправка от цистерн запаса к поперечной метацентрической высоте|м|0.018|
-|17|Поправка от балласта к поперечной метацентрической высоте|м|0.155|
-|18|Поперечная метацентрическая высота исправленная|м|0.355|
-|19|Продольный метацентрический радиус|м|179.551|
-|20|Аппликата продольного метацентра|м|183.709|
-|21|Продольная метацентрическая высота|м|177.341|
-|22|Поправка от цистерн запаса к продольной метацентрической высоте|м|0.001|
-|23|Поправка от балласта к продольной метацентрической высоте|м|1.849|
-|24|Продольная метацентрическая высота исправленная|м|175.491|
-|33|Давление ветра|Па|504.000|
-|34|Площадь парусности|м^2|882.719|
-|35|Плечо парусности|м|5.363|
-|36|Плечо статического ветрового кренящего момента|м|0.030|
-|37|Плечо динамического ветрового кренящего момента|м|0.045|
-|38|Ветровой статический угол крена|град|4.644|
-|39|Ветровой динамический угол крена|град|6.765|
-|40|Угол второго пересечения плеча динамического ветрового момента с ДСО|град|60.000|
-|41|Амплитуда качки|град|16.000|
-|42|Период качки|с|19.243|
-|43|Площадь a|м^2|0.019|
-|44|Площадь b|м^2|0.160|
-|45|Угол входа в воду кромки палубы|град|25.625|
-|46|Угол заливания|град|46.490|
-|47|Угол заката ДСО|град|60.000|
-|53|Ордината центра величины|м|0.000|
-|54|Абсцисса центра площади ватерлинии, от кормового перпендикуляра|м|61.422|
-|55|Абсцисса центра величины от кормового перпендикуляра|м|63.591|
-|95|Поправка к поперечной метацентрической высоте|м|0.173|
+|8|Tonnes per 1 cm|t|19.877|
+|9|Moment to heel 1 degree|t•m|87.187|
+|10|Moment to trim 1 cm|t•m/cm|189.175|
+|11|Vertical centre of buoyancy|m|4.158|
+|13|Transverse metacentric radius|m|2.737|
+|14|Vertical centre of transverse metacentr|m|6.895|
+|15|Transverse metacentric height|m|0.528|
+|16|Correction to transverse metacentric height of stores|m|0.018|
+|17|Correction to transverse metacentric height of ballast|m|0.155|
+|18|Transverse metacentric height fixed|m|0.355|
+|19|Longitudinal metacentric radius|m|179.551|
+|20|Vertical centre of longitudinal metacentr|m|183.709|
+|21|Longitudinal metacentric height|m|177.341|
+|22|Correction to longitudinal metacentric height of stores|m|0.001|
+|23|Correction to longitudinal metacentric height of ballast|m|1.849|
+|24|	Longitudinal metacentric height fixed|m|175.491|
+|33|Wind pressure|Pa|504.000|
+|34|Windage area|m^2|882.719|
+|35|Windage area lever|m|5.363|
+|36|Static windage heeling lever|m|0.030|
+|37|Dynamic windage heeling lever|m|0.045|
+|38|Static windage heeling angle|deg|4.644|
+|39|Dynamic windage heeling angle|deg|6.765|
+|40|Heeling angle of second point of intersection with|deg|60.000|
+|41|Roll amplitude|deg|16.000|
+|42|Roll period|s|19.243|
+|43|Area a|m^2|0.019|
+|44|Area b|m^2|0.160|
+|45|Open deck edge immersion angle|deg|25.625|
+|46|Angle of down-flooding|deg|46.490|
+|47|Sunset angle|deg|60.000|
+|53|Transverse center of buoyancy|m|0.000|
+|54|Longitudinal center of flotation, from AP|m|61.422|
+|55|Longitudinal center of buoyancy, from AP|m|63.591|
+|95|Correction to transverse metacentric height|m|0.173|
   
-
-

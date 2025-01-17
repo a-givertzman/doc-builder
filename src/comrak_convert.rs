@@ -158,7 +158,6 @@ impl ComrakConvert {
         let template = fs::read_to_string(&self.template).unwrap();
         let html = template.replace(Self::CONTENT, &html);
         let html = html.replace(Self::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
-        // let html = html.replace("\"/assets", "\"./assets");
         let mut file = fs::OpenOptions::new()
             .truncate(true)
             .create(true)

@@ -26,7 +26,10 @@ fn main() {
                 Some(output) => PathBuf::from(output),
                 None => path.clone(),
             };
-            let template = "template.html";
+            let template = match cli.template {
+                Some(template) => PathBuf::from(template),
+                None => PathBuf::from("template.html"),
+            };
             ComrakConvert::new(&path, &output, assets, template).convert();
         }
         Err(err) => {
