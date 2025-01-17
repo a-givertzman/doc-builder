@@ -1,4 +1,4 @@
-use std::{fs, io::{BufRead, BufReader, Read, Write}, path::{Path, PathBuf}, sync::Arc};
+use std::{fs::{self, File}, io::{BufRead, BufReader, Read, Write}, path::{Path, PathBuf}, sync::Arc};
 
 use base64::{engine::general_purpose, Engine};
 use image::{DynamicImage, ImageFormat};
@@ -16,12 +16,14 @@ pub struct ComrakConvert {
     output: PathBuf,
     assets: PathBuf,
     template: PathBuf,
+    math_script: PathBuf,
 }
 //
 //
 impl ComrakConvert {
     const CONTENT: &str = "======================content======================";
     const PAGEBREAK: &str = "======================pagebreak======================";
+    const MATH_MODULE: &str = "======================math-module======================";
     ///
     /// Returns ComracConvert new instance
     /// - `path` - folder with markdown documents
@@ -32,6 +34,7 @@ impl ComrakConvert {
             output: output.as_ref().to_path_buf(),
             assets: assets.as_ref().parent().unwrap_or(assets.as_ref()) .to_path_buf(),
             template: template.as_ref().to_path_buf(),
+            math_script: PathBuf::from("src/mathJax/es5/tex-mml-chtml.js"),
         }
     }
     /// 
@@ -117,12 +120,26 @@ impl ComrakConvert {
         result
         // html.to_owned()
     }
+    ///
+    /// 
     fn image_to_base64(img: &DynamicImage) -> String {
         let mut image_data: Vec<u8> = Vec::new();
         img.write_to(&mut std::io::Cursor::new(&mut image_data), ImageFormat::Png)
             .unwrap();
         let res_base64 = general_purpose::STANDARD.encode(image_data);
         format!("data:image/png;base64,{}", res_base64)
+    }
+    ///
+    /// Embedding formula math module js script
+    fn embedd_math(html: &str, path: &Path) -> String {
+        let script = fs::read_to_string(path).unwrap();
+        let math_re = format!(r"[ \t]*//[ \t]*{}.*", Self::MATH_MODULE);
+        log::debug!("embedd_math | math_module: {}", script.len());
+        log::debug!("embedd_math | math_re: '{}'", math_re);
+        let re = Regex::new(&math_re).unwrap();
+        let html = re.replace(html, script).into_owned();
+        log::debug!("embedd_math | html: '{}'", html);
+        html
     }
     ///
     /// Performs a conversion
@@ -156,6 +173,7 @@ impl ComrakConvert {
         let html = Self::comrack_parse(&doc);
         let html = Self::embedd_images(&html, &self.assets);
         let template = fs::read_to_string(&self.template).unwrap();
+        // let template = Self::embedd_math(&template, &self.math_script);
         let html = template.replace(Self::CONTENT, &html);
         let html = html.replace(Self::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
         let mut file = fs::OpenOptions::new()
