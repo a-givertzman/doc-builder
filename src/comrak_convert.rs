@@ -108,7 +108,6 @@ impl ComrakConvert {
                             //     let img = Self::image_to_base64(&img);
                             //     let img = format!("{}{}{}", prefix.as_str(), img, sufix.as_str());
                             //     // <img src="">
-
                             result.push_str(prefix.as_str());
                             result.push_str(path.as_os_str().to_str().unwrap());
                             result.push_str(sufix.as_str());
@@ -254,8 +253,23 @@ impl ComrakConvert {
         if !doc.ends_with("\n\n") {
             doc.push_str("\n\n");
         }
-        doc.push_str(Self::PAGEBREAK);
-        doc.push_str("\n\n");
+        if !Self::ends_with_pagebreak(doc) {
+            doc.push_str(Self::PAGEBREAK);
+            doc.push_str("\n\n");
+        }
+    }
+    ///
+    /// Returns true if string has page break at the end
+    fn ends_with_pagebreak(doc: &str) -> bool {
+        let re_non_whitespace = Regex::new(r"\S").unwrap();
+        let last_non_emty_line = doc
+            .rsplit("\n")
+            .skip_while(|line| !re_non_whitespace.is_match(line))
+            .next();
+        match last_non_emty_line {
+            Some(last_line) => last_line.contains(Self::PAGEBREAK),
+            None => false,
+        }
     }
     ///
     /// Returns a `html` representation of the markdown `document`
