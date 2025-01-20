@@ -72,3 +72,9 @@ or
 ```bash
 cargo run --release -- ./doc/algorithm/ --assets ./doc/assets/ --output ./doc/html/doc.html
 ```
+
+## References
+
+Rust crate [build_html](https://docs.rs/build_html/latest/build_html/)
+Rust pacages for [HTML Templating](https://www.arewewebyet.org/topics/templating/)
+Rust macro for writing [HTML templates](https://docs.rs/maud/latest/maud/)

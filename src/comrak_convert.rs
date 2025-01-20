@@ -138,7 +138,7 @@ impl ComrakConvert {
         log::debug!("embedd_math | math_re: '{}'", math_re);
         let re = Regex::new(&math_re).unwrap();
         let html = re.replace(html, script).into_owned();
-        log::debug!("embedd_math | html: '{}'", html);
+        // log::debug!("embedd_math | html: '{}'", html);
         html
     }
     ///
