@@ -74,6 +74,7 @@ impl ComrakConvert {
                 result.push_str(
                     &html[las_match..prefix.start()]
                 );
+                let path_str = path.as_str();
                 let path = if path.as_str().starts_with("/") {
                     assets.join(path.as_str().trim_start_matches("/"))
                 } else {
@@ -101,13 +102,16 @@ impl ComrakConvert {
                             }
                         }
                         _ => {
-                            //     log::debug!("embedd_images | reading img: {:?}...", path);
+                            log::debug!("embedd_images | img by ref: {:?}...", path);
                             //     let img = image::ImageReader::open(&path).unwrap().decode().unwrap();
                             //     log::debug!("embedd_images | reading img: {:?} - Ok", path);
                             //     let img = Self::image_to_base64(&img);
                             //     let img = format!("{}{}{}", prefix.as_str(), img, sufix.as_str());
                             //     // <img src="">
-                                // result.push_str(&img);
+
+                            result.push_str(prefix.as_str());
+                            result.push_str(path.as_os_str().to_str().unwrap());
+                            result.push_str(sufix.as_str());
                         }
                     }
                 }
@@ -172,9 +176,16 @@ impl ComrakConvert {
         };
         let html = Self::comrack_parse(&doc);
         let html = Self::embedd_images(&html, &self.assets);
-        let template = fs::read_to_string(&self.template).unwrap();
-        // let template = Self::embedd_math(&template, &self.math_script);
-        let html = template.replace(Self::CONTENT, &html);
+        let html = match fs::read_to_string(&self.template) {
+            Ok(template) => {
+                // let template = Self::embedd_math(&template, &self.math_script);
+                template.replace(Self::CONTENT, &html)
+            }
+            Err(_) => {
+                log::debug!("convert | Default template.html - is not found in: {:?}", self.template.as_os_str());
+                html
+            }
+        };
         let html = html.replace(Self::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
         let mut file = fs::OpenOptions::new()
             .truncate(true)
