@@ -1,6 +1,6 @@
 use clap::Parser;
 /// 
-/// Simple program to greet a person
+/// Converts markdown files to the solid html document
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 pub struct Cli {

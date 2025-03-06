@@ -1,7 +1,19 @@
 [package]
 name = "md_to_pdf"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
+
+[lib]
+name = "utils"
+path = "src/lib.rs"
+
+[[bin]]
+name = "md_to_pdf"
+path = "src/main.rs"
+
+[[bin]]
+name = "bench"
+path = "src/bench/bench.rs"
 
 [dependencies]
 log = { workspace = true }
@@ -18,8 +30,8 @@ indexmap = "^2.7"
 regex = "^1.11"
 #
 # Md
-markdown = "1.0.0-alpha.21"
-comrak = "^0.32"
+markdown = "1.0.0-alpha.23"
+comrak = "^0.36"
 #
 # Cli
 clap = "^4.5"
