@@ -2,10 +2,20 @@
 <html>
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>BoardTrix</title>
+    <title>Report title</title>
 
     <script async src="../src/mathJax/es5/tex-mml-chtml.js"></script>
+    <!-- <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [
+                    ['$', '$'],
+                    // ['\\(', '\\)'],
+                ],
+            },
+        };
+    </script>
 
     <!-- Embedded stylesheet -->
     <style>
@@ -1267,28 +1277,12 @@
             /* page-break-after works, as well */
         }
     </style>
-
-    <!-- Embedded math module -->
-    <script async>
-        // ======================math-module======================
-    </script>
-
-    <!-- Embedded math module options-->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [
-                    ['$', '$'],
-                    // ['\\(', '\\)'],
-                ],
-            },
-        }
-    </script>
-
 </head>
 
 <body>
-    ======================content======================
+    <section>
+        ======================content======================
+    </section>
 </body>
 
 </html>

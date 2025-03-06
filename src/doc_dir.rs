@@ -61,14 +61,23 @@ impl DocDir {
     }
     ///
     /// Returns a list of all files & folders containing in the path
-    pub fn scan(mut self) -> DocDir {
+    /// - `ext` - filtering files by extension '.md' - fo example, empty mask - all files
+    pub fn scan(mut self, ext: &str) -> DocDir {
         match fs::read_dir(&self.path) {
             Ok(dirs) => {
                 for path in dirs.map(|d| d.unwrap().path()) {
                     if path.is_dir() {
-                        self.children.push(DocDir::new(&path).scan());
+                        self.children.push(DocDir::new(&path).scan(ext));
                     } else {
-                        self.children.push(DocDir::new(&path));
+                        if ext.is_empty() {
+                            self.children.push(DocDir::new(&path));
+                        } else {
+                            if let Some(path_ext) = path.extension() {
+                                if path_ext == ext {
+                                    self.children.push(DocDir::new(&path));
+                                }
+                            }
+                        }
                     }
                 }
             }

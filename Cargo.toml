@@ -20,3 +20,10 @@ regex = "^1.11"
 # Md
 markdown = "1.0.0-alpha.21"
 comrak = "^0.32"
+#
+# Cli
+clap = "^4.5"
+#
+# Images
+image = "^0.25"
+base64 = "^0.22"
