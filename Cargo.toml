@@ -39,3 +39,6 @@ clap = "^4.5"
 # Images
 image = "^0.25"
 base64 = "^0.22"
+#
+# Mermaid
+mermaid-rs = "^0.1"
