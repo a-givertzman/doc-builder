@@ -1,7 +1,10 @@
 use std::{fs, path::{Path, PathBuf}};
 use regex::Regex;
 ///
-/// Sanning files & folders in the `path`
+/// Scanning files & folders in the `path`
+/// - builds nested collections of documents
+/// - first md document in each folder should contains the header of it document
+/// - following and nested documents will be joined to it header
 #[derive(Clone)]
 pub struct DocDir {
     pub path: PathBuf,

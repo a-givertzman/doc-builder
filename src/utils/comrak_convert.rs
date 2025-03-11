@@ -3,7 +3,9 @@ use std::{fs::{self}, io::{BufReader, Read, Write}, path::{Path, PathBuf}, sync:
 // use base64::{engine::general_purpose, Engine};
 // use image::{DynamicImage, ImageFormat};
 use regex::Regex;
-use super::doc_dir::DocDir;
+use crate::utils::title_page::Title;
+
+use super::{doc_dir::DocDir, md_doc::MdDoc};
 // use crate::doc_dir::DocDir;
 
 ///
@@ -21,8 +23,6 @@ pub struct ComrakConvert {
 //
 //
 impl ComrakConvert {
-    const CONTENT: &str = "======================content======================";
-    const PAGEBREAK: &str = "======================pagebreak======================";
     // const MATH_MODULE: &str = "======================math-module======================";
     ///
     /// Returns ComracConvert new instance
@@ -36,31 +36,6 @@ impl ComrakConvert {
             template: template.as_ref().to_path_buf(),
             // math_script: PathBuf::from("src/mathJax/es5/tex-mml-chtml.js"),
         }
-    }
-    /// 
-    /// Add page brakes
-    fn add_pagebreakes(doc: &str) -> String {
-        let lines: Vec<&str> = doc.split("\n").collect();
-        let mut doc = String::new();
-        if let Some(line) = lines.first() {
-            doc.push_str(line);
-            doc.push_str("\n");
-        }
-        let mut prev_is_empty = false;
-        let re_is_empty = Regex::new(r#"(^\s*$)"#).unwrap();
-        for line in lines.into_iter().skip(1) {
-            if line.starts_with("# ") {
-                if !prev_is_empty {
-                    doc.push_str("\n\n");
-                }
-                doc.push_str(Self::PAGEBREAK);
-                doc.push_str("\n\n");
-            }
-            doc.push_str(line);
-            doc.push_str("\n");
-            prev_is_empty = re_is_empty.is_match(line);
-        }
-        doc
     }
     ///
     /// Embedding images into Html
@@ -147,45 +122,51 @@ impl ComrakConvert {
     ///
     /// Performs a conversion
     pub fn convert(&self) {
-        let mut doc = String::new();
         let target = if self.output.is_dir() {
             self.output.join("doc.html")
         } else {
             self.output.with_extension("html")
         };
-        if self.path.is_dir() {
-            let dir = DocDir::new(&self.path).scan("md");
-            Self::combine(dir.clone(), &mut doc);
-            doc = Self::add_pagebreakes(&doc);
-            let md_path = self.output.with_extension("md");
-            let mut file = fs::OpenOptions::new()
-                .truncate(true)
-                .create(true)
-                .write(true)
-                .open(&md_path)
-                .unwrap();
-            file.write_all(doc.as_bytes()).unwrap();
-        } else {
-            let mut file = fs::OpenOptions::new()
-                .read(true)
-                .open(&self.path)
-                .unwrap();
-            file.read_to_string(&mut doc).unwrap();
-            doc = Self::add_pagebreakes(&doc);
-        };
-        let html = Self::comrack_parse(&doc);
+        let dir = DocDir::new(&self.path).scan("md");
+        let doc = MdDoc::new(dir).read();
+        // Self::combine(dir.clone(), &mut doc);
+        // doc = Self::add_pagebreakes(&doc);
+        let md_path = self.output.with_extension("md");
+        let mut file = fs::OpenOptions::new()
+            .truncate(true)
+            .create(true)
+            .write(true)
+            .open(&md_path)
+            .unwrap();
+        file.write_all(doc.joined().as_bytes()).unwrap();
+
+        let html = Self::comrack_parse(&doc.body);
         let html = Self::embedd_images(&html, &self.assets);
         let html = match fs::read_to_string(&self.template) {
             Ok(template) => {
                 // let template = Self::embedd_math(&template, &self.math_script);
-                template.replace(Self::CONTENT, &html)
+                template.replace(MdDoc::BODY_CONTENT, &html)
             }
             Err(_) => {
                 log::debug!("convert | Default template.html - is not found in: {:?}", self.template.as_os_str());
                 html
             }
         };
-        let html = html.replace(Self::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
+        let html = match &doc.title {
+            Some(title) => {
+                log::debug!(".convert | Title page: {:#?}", title);
+                let html = html.replace(Title::LOGO, &title.logo);
+                let html = html.replace(Title::ADDR, &title.addr);
+                let html = html.replace(Title::NAME, &title.name);
+                let html = html.replace(Title::DESCR, &title.descr);
+                html
+            }
+            None => {
+                log::warn!(".convert | Title page not found");
+                html
+            }
+        };
+        let html = html.replace(MdDoc::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
         let mut file = fs::OpenOptions::new()
             .truncate(true)
             .create(true)
@@ -194,82 +175,6 @@ impl ComrakConvert {
             .unwrap();
         file.write_all(html.as_bytes()).unwrap();
     
-    }
-    ///
-    /// Returns marckdown `document` combined from md files
-    fn combine(dir: DocDir, doc: &mut String) {
-        log::debug!("\npath: '{:?}'", dir.path);
-        let first = dir.children.iter().find(|child| {
-            (!child.is_dir) && child.header() == dir.header()
-        });
-        match first {
-            Some(first) => {
-                let lines = fs::read_to_string(&first.path).unwrap();
-                let mut lines: Vec<&str> = lines.split('\n').collect();
-                let re = Regex::new(r"^[ \t]*(#*)[ \t](.*)$").unwrap();
-                let first_line = lines.remove(0);
-                let first_line = match re.captures(first_line) {
-                    Some(caps) => format!(
-                        "{} {}. {}\n\n",
-                        caps.get(1).map_or("???", |g| g.as_str()),
-                        first.header(),
-                        caps.get(2).map_or("???", |g| g.as_str()),
-                    ),
-                    None => first_line.to_owned(),
-                };
-                let content = if lines.len() > 1 {
-                    lines.join("\n")
-                } else {
-                    "\n\n".to_owned()
-                };
-                doc.extend([
-                    first_line,
-                    content,
-                ]);
-            }
-            None => {
-                log::warn!("convert_comrack | Headeer not found in '{:?}'", dir.path);
-            },
-        }
-    
-        let children = dir.children.iter().filter(|child| {
-            if child.is_dir {
-                true
-            } else {
-                child.header() != dir.header()
-            }
-        });
-        for child in children {
-            if child.is_dir {
-                Self::combine(child.to_owned(), doc)
-            } else {
-                println!("\t{:?}", child.path);
-                doc.push_str(
-                    &fs::read_to_string(&child.path).unwrap(),
-                );
-            }
-            doc.push_str("\n\n");
-        }
-        if !doc.ends_with("\n\n") {
-            doc.push_str("\n\n");
-        }
-        if !Self::ends_with_pagebreak(doc) {
-            doc.push_str(Self::PAGEBREAK);
-            doc.push_str("\n\n");
-        }
-    }
-    ///
-    /// Returns true if string has page break at the end
-    fn ends_with_pagebreak(doc: &str) -> bool {
-        let re_non_whitespace = Regex::new(r"\S").unwrap();
-        let last_non_emty_line = doc
-            .rsplit("\n")
-            .skip_while(|line| !re_non_whitespace.is_match(line))
-            .next();
-        match last_non_emty_line {
-            Some(last_line) => last_line.contains(Self::PAGEBREAK),
-            None => false,
-        }
     }
     ///
     /// Returns a `html` representation of the markdown `document`
