@@ -2,7 +2,7 @@ use std::fs;
 
 use regex::Regex;
 
-use super::{doc_dir::DocDir, title_page::Title};
+use super::{doc_dir::DocDir, eval::Eval, title_page::Title};
 
 ///
 /// Marcdown document
@@ -12,41 +12,39 @@ use super::{doc_dir::DocDir, title_page::Title};
 pub struct MdDoc {
     dir: DocDir,
     pub title: Option<Title>,
-    pub body: String,
+    pub md_body: String,
+    pub html: String,
 }
 //
 //
 impl MdDoc {
+    ///
+    /// To be replaced with `<div class="pagebreak"> </div>`
     pub const PAGEBREAK: &str = "======================pagebreak======================";
+    ///
+    /// To be replaced with html body content
     pub const BODY_CONTENT: &str = "======================body-section-content======================";
-    /// Returns [Doc] new instance
+    ///
+    /// Returns [MdDoc] new instance
     /// - `input` - string, contains markdown
     pub fn new(dir: DocDir) -> Self {
         Self {
             dir,
             title: None,
-            body: String::new(),
+            md_body: String::new(),
+            html: String::new(),
         }
     }
     ///
-    /// Returns marckdown document read from the specified `dir`
-    /// - combined from multiple md files stored in the nested folders
-    pub fn read(self) -> Self {
-        log::debug!("Doc.read | path: '{:?}'", self.dir.path);
-        let mut body = String::new();
-        let mut title = None;
-        Self::combine(&self.dir, &mut body, &mut title);
-        let body = Self::add_pagebreakes(&body);
-        Self {
-            dir: self.dir,
-            title,
-            body
-        }
+    ///
+    /// Returns [MdDoc] new instance with specified `html_body`
+    pub fn with_html(self, html: String,) -> Self {
+        Self { dir: self.dir, title: self.title, md_body: self.md_body, html }
     }
     ///
     /// Returns joined `title` and `body`
     pub fn joined(&self) -> String {
-        format!("{}{}", self.title.clone().map_or("".into(), |t| t.raw), self.body)
+        format!("{}{}", self.title.clone().map_or("".into(), |t| t.raw), self.md_body)
     }
     /// 
     /// Add page brakes
@@ -168,6 +166,26 @@ impl MdDoc {
                 log::warn!("read_header | Header not found in '{:?}'", dir.path);
                 String::new()
             },
+        }
+    }
+}
+//
+//
+impl Eval<(), Self> for MdDoc {
+    ///
+    /// Returns marckdown document read from the specified `dir`
+    /// - combined from multiple md files stored in the nested folders
+    fn eval(&mut self, _: ()) -> Self {
+        log::debug!("Doc.eval | path: '{:?}'", self.dir.path);
+        let mut body = String::new();
+        let mut title = None;
+        Self::combine(&self.dir, &mut body, &mut title);
+        let body = Self::add_pagebreakes(&body);
+        Self {
+            dir: self.dir.clone(),
+            title,
+            md_body: body,
+            html: String::new(),
         }
     }
 }

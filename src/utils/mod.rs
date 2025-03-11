@@ -1,5 +1,13 @@
 pub mod cli;
 pub mod comrak_convert;
 pub mod doc_dir;
+pub mod eval;
+pub mod html_embedd_svg;
+pub mod html_fill_title_page;
+pub mod html_replace_pagebreaks;
+pub mod html_use_template;
 pub mod md_doc;
+pub mod md_to_html;
 pub mod title_page;
+pub mod write_html;
+pub mod write_md;
