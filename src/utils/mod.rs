@@ -6,6 +6,7 @@ pub mod html_embedd_svg;
 pub mod html_fill_title_page;
 pub mod html_regex_replace;
 pub mod html_replace_pagebreaks;
+pub mod html_to_pdf;
 pub mod html_use_template;
 pub mod md_doc;
 pub mod md_to_html;

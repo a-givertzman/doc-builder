@@ -45,3 +45,4 @@ mermaid-rs = "^0.1"
 #
 # Html2Pdf
 html2pdf = "^0.8"
+headless_chrome = "^1.0"

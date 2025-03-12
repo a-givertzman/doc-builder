@@ -1,11 +1,11 @@
-use std::{collections::HashMap, path::{Path, PathBuf}};
+use std::{collections::HashMap, path::{Path, PathBuf}, time::Duration};
 // use base64::{engine::general_purpose, Engine};
 // use image::{DynamicImage, ImageFormat};
 
 use regex::Regex;
 
 use super::{
-    doc_dir::DocDir, eval::Eval, html_embedd_svg::HtmlEmbeddSvg, html_fill_title_page::HtmlFillTitle, html_regex_replace::HtmlRegexReplace, html_replace_pagebreaks::HtmlReplacePageBreaks, html_use_template::HtmlUseTemplate, md_doc::MdDoc, md_to_html::MdToHtml, write_html::WriteHtml, write_md::WriteMd
+    doc_dir::DocDir, eval::Eval, html_embedd_svg::HtmlEmbeddSvg, html_fill_title_page::HtmlFillTitle, html_regex_replace::HtmlRegexReplace, html_replace_pagebreaks::HtmlReplacePageBreaks, html_to_pdf::{HtmlToPdf, HtmlToPdfOptions}, html_use_template::HtmlUseTemplate, md_doc::MdDoc, md_to_html::MdToHtml, write_html::WriteHtml, write_md::WriteMd
 };
 ///
 /// Converts multiple `markdown` documents into the single `Html`
@@ -59,30 +59,43 @@ impl ComrakConvert {
     ///
     /// Performs a conversion
     pub fn convert(&self) {
-        let target = if self.output.is_dir() {
-            self.output.join("doc.html")
+        let (target_html, target_pdf) = if self.output.is_dir() {
+            (
+                self.output.join("doc.html"),
+                self.output.join("doc.pdf"),
+            )
         } else {
-            self.output.with_extension("html")
+            (
+                self.output.with_extension("html"),
+                self.output.with_extension("pdf"),
+            )
         };
-        let dir = DocDir::new(&self.path).scan("md");
-        // let doc = MdDoc::new(dir);
-        // Self::combine(dir.clone(), &mut doc);
-        // doc = Self::add_pagebreakes(&doc);
-        let _ = WriteHtml::new(
-            &target,
-            HtmlRegexReplace::new(
-                Regex::new(r#"class="language-mermaid""#).unwrap(),
-                HashMap::from([(0, r#"class="mermaid""#)]),
-                HtmlReplacePageBreaks::new(
-                    HtmlFillTitle::new(
-                        HtmlUseTemplate::new(
-                            &self.template,
-                            HtmlEmbeddSvg::new(
-                                &self.assets,
-                                MdToHtml::new(
-                                    WriteMd::new(
-                                        &self.output,
-                                        MdDoc::new(dir),
+        let _ = HtmlToPdf::new(
+            &target_html,
+            &target_pdf,
+            HtmlToPdfOptions {
+                landscape: false,
+                scale: None,
+                wait_before_print: Some(Duration::from_secs(1)),
+            },
+            WriteHtml::new(
+                &target_html,
+                HtmlRegexReplace::new(
+                    Regex::new(r#"class="language-mermaid""#).unwrap(),
+                    HashMap::from([(0, r#"class="mermaid""#)]),
+                    HtmlReplacePageBreaks::new(
+                        HtmlFillTitle::new(
+                            HtmlUseTemplate::new(
+                                &self.template,
+                                HtmlEmbeddSvg::new(
+                                    &self.assets,
+                                    MdToHtml::new(
+                                        WriteMd::new(
+                                            &self.output,
+                                            MdDoc::new(
+                                                DocDir::new(&self.path).scan("md"),
+                                            ),
+                                        ),
                                     ),
                                 ),
                             ),

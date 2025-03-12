@@ -96,8 +96,8 @@ impl MdToHtml {
 //
 impl Eval<(), MdDoc> for MdToHtml {
     fn eval(&mut self, _: ()) -> MdDoc {
-        let md = self.input.eval(());
-        let html = Self::parse(&md.markdown);
-        md.with_html(html)
+        let doc = self.input.eval(());
+        let html = Self::parse(&doc.markdown);
+        doc.with_html(html)
     }
 }
