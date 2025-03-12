@@ -1,11 +1,11 @@
-use std::path::{Path, PathBuf};
+use std::{collections::HashMap, path::{Path, PathBuf}};
 // use base64::{engine::general_purpose, Engine};
 // use image::{DynamicImage, ImageFormat};
 
+use regex::Regex;
+
 use super::{
-    doc_dir::DocDir, eval::Eval, html_embedd_svg::HtmlEmbeddSvg, html_fill_title_page::HtmlFillTitle,
-    html_replace_pagebreaks::HtmlReplacePageBreaks, html_use_template::HtmlUseTemplate, md_doc::MdDoc,
-    md_to_html::MdToHtml, write_html::WriteHtml, write_md::WriteMd,
+    doc_dir::DocDir, eval::Eval, html_embedd_svg::HtmlEmbeddSvg, html_fill_title_page::HtmlFillTitle, html_regex_replace::HtmlRegexReplace, html_replace_pagebreaks::HtmlReplacePageBreaks, html_use_template::HtmlUseTemplate, md_doc::MdDoc, md_to_html::MdToHtml, write_html::WriteHtml, write_md::WriteMd
 };
 ///
 /// Converts multiple `markdown` documents into the single `Html`
@@ -70,22 +70,26 @@ impl ComrakConvert {
         // doc = Self::add_pagebreakes(&doc);
         let _ = WriteHtml::new(
             &target,
-            HtmlReplacePageBreaks::new(
-                HtmlFillTitle::new(
-                    HtmlUseTemplate::new(
-                        &self.template,
-                        HtmlEmbeddSvg::new(
-                            &self.assets,
-                            MdToHtml::new(
-                                WriteMd::new(
-                                    &self.output,
-                                    MdDoc::new(dir),
+            HtmlRegexReplace::new(
+                Regex::new(r#"class="language-mermaid""#).unwrap(),
+                HashMap::from([(0, r#"class="mermaid""#)]),
+                HtmlReplacePageBreaks::new(
+                    HtmlFillTitle::new(
+                        HtmlUseTemplate::new(
+                            &self.template,
+                            HtmlEmbeddSvg::new(
+                                &self.assets,
+                                MdToHtml::new(
+                                    WriteMd::new(
+                                        &self.output,
+                                        MdDoc::new(dir),
+                                    ),
                                 ),
                             ),
-                        )
-                    )
-                )
-            )
+                        ),
+                    ),
+                ),
+            ),
         )
         .eval(());
     }
