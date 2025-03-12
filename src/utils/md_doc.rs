@@ -12,7 +12,7 @@ use super::{doc_dir::DocDir, eval::Eval, title_page::Title};
 pub struct MdDoc {
     dir: DocDir,
     pub title: Option<Title>,
-    pub md_body: String,
+    pub markdown: String,
     pub html: String,
 }
 //
@@ -31,20 +31,24 @@ impl MdDoc {
         Self {
             dir,
             title: None,
-            md_body: String::new(),
+            markdown: String::new(),
             html: String::new(),
         }
     }
     ///
-    ///
     /// Returns [MdDoc] new instance with specified `html_body`
     pub fn with_html(self, html: String,) -> Self {
-        Self { dir: self.dir, title: self.title, md_body: self.md_body, html }
+        Self { dir: self.dir, title: self.title, markdown: self.markdown, html }
+    }
+    ///
+    /// Returns [MdDoc] new instance with specified `markdown`
+    pub fn with_md(self, md: String,) -> Self {
+        Self { dir: self.dir, title: self.title, markdown: md, html: self.html }
     }
     ///
     /// Returns joined `title` and `body`
     pub fn joined(&self) -> String {
-        format!("{}{}", self.title.clone().map_or("".into(), |t| t.raw), self.md_body)
+        format!("{}{}", self.title.clone().map_or("".into(), |t| t.raw), self.markdown)
     }
     /// 
     /// Add page brakes
@@ -184,7 +188,7 @@ impl Eval<(), Self> for MdDoc {
         Self {
             dir: self.dir.clone(),
             title,
-            md_body: body,
+            markdown: body,
             html: String::new(),
         }
     }

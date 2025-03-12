@@ -17,7 +17,7 @@ impl MdToHtml {
     }
     ///
     /// Returns a `html` representation of the markdown `document`
-    fn comrack_parse(document: &str) -> String {
+    fn parse(document: &str) -> String {
         // The returned nodes are created in the supplied Arena, and are bound by its lifetime.
         let arena = comrak::Arena::new();
         // Parse the document into a root `AstNode`
@@ -97,7 +97,7 @@ impl MdToHtml {
 impl Eval<(), MdDoc> for MdToHtml {
     fn eval(&mut self, _: ()) -> MdDoc {
         let md = self.input.eval(());
-        let html = Self::comrack_parse(&md.md_body);
+        let html = Self::parse(&md.markdown);
         md.with_html(html)
     }
 }

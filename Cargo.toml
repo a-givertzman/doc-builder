@@ -29,7 +29,7 @@ indexmap = "^2.7"
 # Regex
 regex = "^1.11"
 #
-# Md
+# Markdown
 markdown = "1.0.0-alpha.23"
 comrak = "^0.36"
 #
@@ -42,3 +42,6 @@ base64 = "^0.22"
 #
 # Mermaid
 mermaid-rs = "^0.1"
+#
+# Html2Pdf
+html2pdf = "^0.8"

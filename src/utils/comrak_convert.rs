@@ -1,13 +1,12 @@
-use std::{fs::{self}, io::{BufReader, Read, Write}, path::{Path, PathBuf}, sync::Arc};
-
+use std::path::{Path, PathBuf};
 // use base64::{engine::general_purpose, Engine};
 // use image::{DynamicImage, ImageFormat};
-use regex::Regex;
-use crate::utils::title_page::Title;
 
-use super::{doc_dir::DocDir, eval::Eval, html_embedd_svg::HtmlEmbeddSvg, html_fill_title_page::HtmlFillTitle, html_replace_pagebreaks::HtmlReplacePageBreaks, html_use_template::HtmlUseTemplate, md_doc::MdDoc, md_to_html::MdToHtml, write_html::WriteHtml, write_md::WriteMd};
-// use crate::doc_dir::DocDir;
-
+use super::{
+    doc_dir::DocDir, eval::Eval, html_embedd_svg::HtmlEmbeddSvg, html_fill_title_page::HtmlFillTitle,
+    html_replace_pagebreaks::HtmlReplacePageBreaks, html_use_template::HtmlUseTemplate, md_doc::MdDoc,
+    md_to_html::MdToHtml, write_html::WriteHtml, write_md::WriteMd,
+};
 ///
 /// Converts multiple `markdown` documents into the single `Html`
 /// 
@@ -89,49 +88,5 @@ impl ComrakConvert {
             )
         )
         .eval(());
-        // let md_path = self.output.with_extension("md");
-        // let mut file = fs::OpenOptions::new()
-        //     .truncate(true)
-        //     .create(true)
-        //     .write(true)
-        //     .open(&md_path)
-        //     .unwrap();
-        // file.write_all(doc.joined().as_bytes()).unwrap();
-
-        // let html = Self::comrack_parse(&doc.body);
-        // let html = Self::embedd_images(&html, &self.assets);
-        // let html = match fs::read_to_string(&self.template) {
-        //     Ok(template) => {
-        //         // let template = Self::embedd_math(&template, &self.math_script);
-        //         template.replace(MdDoc::BODY_CONTENT, &html)
-        //     }
-        //     Err(_) => {
-        //         log::debug!("convert | Default template.html - is not found in: {:?}", self.template.as_os_str());
-        //         html
-        //     }
-        // };
-        // let html = match &doc.title {
-        //     Some(title) => {
-        //         log::debug!(".convert | Title page: {:#?}", title);
-        //         let html = html.replace(Title::LOGO, &title.logo);
-        //         let html = html.replace(Title::ADDR, &title.addr);
-        //         let html = html.replace(Title::NAME, &title.name);
-        //         let html = html.replace(Title::DESCR, &title.descr);
-        //         html
-        //     }
-        //     None => {
-        //         log::warn!(".convert | Title page not found");
-        //         html
-        //     }
-        // };
-        // let html = html.replace(MdDoc::PAGEBREAK, "<div class=\"pagebreak\"> </div>");
-        // let mut file = fs::OpenOptions::new()
-        //     .truncate(true)
-        //     .create(true)
-        //     .write(true)
-        //     .open(target)
-        //     .unwrap();
-        // file.write_all(html.as_bytes()).unwrap();
-    
     }
 }
