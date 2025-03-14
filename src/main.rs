@@ -9,9 +9,6 @@ fn main() {
     DebugSession::init(LogLevel::Debug, Backtrace::Short);
     match Cli::try_parse() {
         Ok(cli) => {
-            // let path = PathBuf::from("sss/docs/user-guide/en");
-            // let path = PathBuf::from("sss/docs/test/report");
-            // let assets = PathBuf::from("sss/assets");
             let path = PathBuf::from(cli.name);
             let assets = match cli.assets {
                 Some(assets) => PathBuf::from(assets),

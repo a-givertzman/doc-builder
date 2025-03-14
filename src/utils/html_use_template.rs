@@ -31,7 +31,7 @@ impl Eval<(), MdDoc> for HtmlUseTemplate {
                 template.replace(MdDoc::BODY_CONTENT, &doc.html)
             }
             Err(_) => {
-                log::debug!("convert | Default template.html - is not found in: {:?}", self.template.as_os_str());
+                log::warn!("convert | Template is not found in: {}", self.template.display());
                 return doc;
             }
         };

@@ -83,14 +83,21 @@ impl MdDoc {
         if !dir.is_dir {
             println!("\t{:?}", dir.path);
             if title.is_none() {
-                if let Some(t) = Title::from(&dir.path) {
-                    log::debug!("Doc.combine | Title: {:#?}", t);
-                    *title = Some(t);
+                match Title::from(&dir.path) {
+                    Some(t) => {
+                        log::debug!("Doc.combine | Title: {:#?}", t);
+                        *title = Some(t);
+                        return;
+                    }
+                    None => {} //log::warn!("Doc.combine | Title page is not fount in: {}", dir.path.display()),
                 };
-            } else {
-                body.push_str(
-                    &fs::read_to_string(&dir.path).unwrap(),
-                )
+            }
+            match fs::read_to_string(&dir.path) {
+                Ok(content) => {
+                    log::trace!("Doc.combine | Content: {:#?}", content);
+                    body.push_str(&content);
+                }
+                Err(err) => log::debug!("Doc.combine | Error read filr: {}: \n\t{:#?}", dir.path.display(), err),
             }
         } else {
             body.push_str(&Self::read_header(&dir));

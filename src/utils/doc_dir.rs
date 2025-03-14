@@ -66,25 +66,27 @@ impl DocDir {
     /// Returns a list of all files & folders containing in the path
     /// - `ext` - filtering files by extension '.md' - fo example, empty mask - all files
     pub fn scan(mut self, ext: &str) -> DocDir {
-        match fs::read_dir(&self.path) {
-            Ok(dirs) => {
-                for path in dirs.map(|d| d.unwrap().path()) {
-                    if path.is_dir() {
-                        self.children.push(DocDir::new(&path).scan(ext));
-                    } else {
-                        if ext.is_empty() {
-                            self.children.push(DocDir::new(&path));
+        if self.path.is_dir() {
+            match fs::read_dir(&self.path) {
+                Ok(dirs) => {
+                    for path in dirs.map(|d| d.unwrap().path()) {
+                        if path.is_dir() {
+                            self.children.push(DocDir::new(&path).scan(ext));
                         } else {
-                            if let Some(path_ext) = path.extension() {
-                                if path_ext == ext {
-                                    self.children.push(DocDir::new(&path));
+                            if ext.is_empty() {
+                                self.children.push(DocDir::new(&path));
+                            } else {
+                                if let Some(path_ext) = path.extension() {
+                                    if path_ext == ext {
+                                        self.children.push(DocDir::new(&path));
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                Err(err) => log::warn!("files | Error in path '{:?}': {:?}", self.path, err),
             }
-            Err(err) => log::warn!("files | Error in path '{:?}': {:?}", self.path, err),
         }
         self.children.sort_by(|path1, path2| path1.path.cmp(&path2.path));
         self
