@@ -18,7 +18,7 @@ pub struct HtmlToPdf {
 impl HtmlToPdf {
     ///
     /// Returns [HtmlToPdf] new instance
-/// -o, --output <output>  Output file. By default, just change the input extension to PDF
+    /// -o, --output <output>  Output file. By default, just change the input extension to PDF
     pub fn new(
         input: &Path,
         output: &Path,
@@ -58,11 +58,11 @@ impl HtmlToPdf {
             scale: options.scale,
             paper_width: Some(PaperSize::A4.paper_width()),
             paper_height: Some(PaperSize::A4.paper_height()),
+            margin_top: Some(0.0),
+            margin_bottom: Some(0.0),
+            margin_left: Some(0.0),
+            margin_right: Some(0.0),
             ..Default::default()
-            // margin_top: Default::default(),
-            // margin_bottom: Default::default(),
-            // margin_left: Default::default(),
-            // margin_right: Default::default(),
             // page_ranges: Default::default(),
             // ignore_invalid_page_ranges: Default::default(),
             // header_template: Default::default(),
