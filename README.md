@@ -1,4 +1,4 @@
-# Converts markdown files to the solid html document
+# Converts markdown files to the solid html / pdf document
 
 ## Required folder structure
 
